@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CoMT — Project Page</title>
+    <meta name="description" content="AI Paper Project Page" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+  </head>
+  <body>
+    <!-- 侧边导航触发器（移动端/窄屏） -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="切换目录" aria-expanded="true">
+      <span class="arrow" aria-hidden="true"></span>
+    </button>
+
+    <!-- 侧边导航 -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner glass">
+        <div class="brand">CoMT</div>
+        <nav class="toc">
+          <a href="#hero" data-ease>Teaser</a>
+          <a href="#abstract" data-ease>Abstract</a>
+          <a href="#method" data-ease>Method</a>
+          <a href="#experiments" data-ease>Experiments</a>
+          <a href="#gallery-single" data-ease>Gallery · Single</a>
+          <a href="#gallery-compare" data-ease>Gallery · Compare</a>
+          <a href="#video" data-ease>Video</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- 回到顶部按钮 -->
+    <button id="backToTop" class="back-to-top" aria-label="返回顶部">⌃</button>
+
+    <main>
+      <!-- 首屏 Teaser 区块 -->
+      <section id="hero" class="section hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <h1 class="title">CoMT: Composable Multimodal Transformer</h1>
+          <p class="subtitle">以可组装的方式连接视觉、语言与动作，让模型像工具箱一样灵活。</p>
+
+          <div class="meta">
+            <div class="authors">作者：Alice Zhang, Bob Li, Carol Wang</div>
+            <div class="affiliations">机构：Somewhere University</div>
+          </div>
+
+          <div class="cta">
+            <a class="btn primary" href="#" target="_blank" rel="noopener">Paper</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">arXiv</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">Code</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">HF Model</a>
+            <a class="btn" href="#" target="_blank" rel="noopener">HF Data</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Abstract -->
+      <section id="abstract" class="section container reveal">
+        <h2>Abstract</h2>
+        <p>
+          我们提出 CoMT，一个可组合的多模态 Transformer 架构，能够以模块化方式整合视觉、语言与动作。
+          该页面提供论文摘要、方法、实验与可交互的可视化示例模板，方便复用至任意研究项目。
+        </p>
+      </section>
+
+      <!-- Method -->
+      <section id="method" class="section container reveal">
+        <h2>Method</h2>
+        <div class="card-grid">
+          <div class="card glass">
+            <h3>模块化设计</h3>
+            <p>以插拔式编码器/适配器构建跨模态路径，支持按任务装配。</p>
+          </div>
+          <div class="card glass">
+            <h3>对齐与路由</h3>
+            <p>通过可学习的门控与对齐损失，在不同模态间高效路由信息。</p>
+          </div>
+          <div class="card glass">
+            <h3>高效训练</h3>
+            <p>采用混合精度与分层冻结，减少训练开销并提升稳定性。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experiments -->
+      <section id="experiments" class="section container reveal">
+        <h2>Experiments</h2>
+        <p>在多模态理解、检索与编辑等任务上验证方法有效性。下方给出可视化模板。</p>
+      </section>
+
+      <!-- 单图画廊模板 -->
+      <section id="gallery-single" class="section container reveal">
+        <div class="section-head">
+          <h2>Gallery · Single</h2>
+          <p>左右箭头切换，点击图片展示对应 caption，底部进度条反映位置。</p>
+        </div>
+        <div class="carousel glass" data-carousel>
+          <button class="nav prev" data-prev aria-label="上一张">‹</button>
+          <div class="viewport">
+            <div class="track" id="carouselTrack">
+              <!-- slides 由 JS 注入占位图 -->
+            </div>
+          </div>
+          <button class="nav next" data-next aria-label="下一张">›</button>
+          <div class="progress"><div class="bar" id="carouselProgress"></div></div>
+          <div class="caption" id="carouselCaption">点击图片显示说明</div>
+        </div>
+      </section>
+
+      <!-- 多图对比模板（原图 vs 多版本） -->
+      <section id="gallery-compare" class="section container reveal">
+        <div class="section-head">
+          <h2>Gallery · Compare</h2>
+          <p>选择版本后，通过滑块在原图与编辑图之间拖动分割线。</p>
+        </div>
+        <div class="variant-picker" id="variantPicker" role="tablist" aria-label="选择编辑版本">
+          <button role="tab" aria-selected="true" data-variant="v1" class="chip">V1</button>
+          <button role="tab" aria-selected="false" data-variant="v2" class="chip">V2</button>
+          <button role="tab" aria-selected="false" data-variant="v3" class="chip">V3</button>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare glass">
+            <div class="img original">
+              <img class="js-original" alt="原图" />
+              <span class="tag">Original</span>
+            </div>
+            <div class="img edited">
+              <img class="js-edited" alt="编辑图" />
+              <span class="tag">Edited</span>
+            </div>
+            <input type="range" class="js-slider" min="0" max="100" value="50" aria-label="对比滑块" />
+          </div>
+          <div class="compare glass">
+            <div class="img original">
+              <img class="js-original" alt="原图" />
+              <span class="tag">Original</span>
+            </div>
+            <div class="img edited">
+              <img class="js-edited" alt="编辑图" />
+              <span class="tag">Edited</span>
+            </div>
+            <input type="range" class="js-slider" min="0" max="100" value="50" aria-label="对比滑块" />
+          </div>
+        </div>
+      </section>
+
+      <!-- 视频模块 -->
+      <section id="video" class="section container reveal">
+        <h2>Video</h2>
+        <div class="video-grid">
+          <video class="glass" controls preload="metadata" poster="" id="localVideo">
+            <!-- 用户可替换 source 为真实视频文件 -->
+          </video>
+          <div class="glass iframe-wrap">
+            <iframe
+              id="ytEmbed"
+              title="YouTube Demo"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer container">
+        <p>© 2025 CoMT. Crafted with ❤️ in teal & light-blue.</p>
+      </footer>
+    </main>
+
+    <script src="static/js/script.js"></script>
+  </body>
+  </html>
+
+
