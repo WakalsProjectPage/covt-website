@@ -56,8 +56,9 @@
             <a class="btn" href="#" target="_blank" rel="noopener">HF Data</a>
           </div>
         </div>
+        
         <figure class="carousel" aria-hidden="true">
-          <img src="static/image/teaser.png" alt="Teaser Image" />
+          <img src="static/image/teaser.png" alt="Teaser Image" style="width: 100%; display: block; margin: 0 auto;" />
         </figure>
       </section>
 
@@ -65,8 +66,10 @@
       <section id="abstract" class="section container reveal">
         <h2>Abstract</h2>
         <p>
-          我们提出 CoMT，一个可组合的多模态 Transformer 架构，能够以模块化方式整合视觉、语言与动作。
-          该页面提供论文摘要、方法、实验与可交互的可视化示例模板，方便复用至任意研究项目。
+          Vision–Language Models (VLMs) excel at language reasoning but falter on advanced fine-grained visual tasks. Lacking sophisticated perceptual abilities, they can miss spatial cues and struggle to represent rich visual with discrete tokens.
+          To address these limitations, we introduce CoMT, a framework that teaches VLMs to both see and think by interleaving discrete text tokens with continuous visual tokens—basic perceptual signals such as segmentation, depth, and edges that ground models in visual space. These tokens act as "anchors," linking language reasoning to core visual capabilities and directing attention to fine-grained details. CoMT trains VLMs to generate anchored tokens jointly with text, enabling them to internalize and reason over visual cues directly in token space. At inference time, the model uses these tokens to ground its outputs without needing explicit maps or external tool calls.
+          Unlike prior tool-using VLMs, which invoke APIs and parse discrete outputs such as bounding boxes or depth maps—often requiring extra control logic or reinforcement learning—CoMT integrates perceptual signals natively into the token space. This yields efficient, self-contained, and visually grounded reasoning.
+          Extensive evaluations show that CoMT consistently improves performance on visual reasoning tasks such as counting, localization, depth, correspondence, and similarity, achieving strong gains on CV-Bench, BLINK, RealWorldQA, and MMStar.
         </p>
       </section>
 
