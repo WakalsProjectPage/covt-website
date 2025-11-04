@@ -135,7 +135,7 @@ updateCarousel();
 
 // -------- 多图对比：版本选择 + 可拖动分割线 --------
 // 复用到 compare-grid 的每个对比组件
-const originalSrc = "static/image/flag.jpg";
+const originalSrc = "static/image/demo-ori.png";
 const editedSrc = {
   v1: placeholder('Edited · V1', '#22d3ee'),
   v2: placeholder('Edited · V2', '#60a5fa'),
