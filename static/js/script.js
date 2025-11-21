@@ -73,96 +73,126 @@ const spy = new IntersectionObserver((entries) => {
 sections.forEach((s) => s && spy.observe(s));
 
 // -------- 单图画廊：生成占位图、切换、caption 与进度条 --------
-function placeholder(label, color = '#7dd3fc') {
-  const svg = encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">\n`+
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">`+
-    `<stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>`+
-    `<stop offset="100%" stop-color="#14b8a6" stop-opacity="0.9"/></linearGradient></defs>`+
-    `<rect width="100%" height="100%" fill="url(#g)"/>`+
-    `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Inter, system-ui" font-size="64" font-weight="800">${label}</text>`+
-    `</svg>`
-  );
-  return `data:image/svg+xml;charset=utf-8,${svg}`;
-}
+// function placeholder(label, color = '#7dd3fc') {
+//   const svg = encodeURIComponent(
+//     `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">\n`+
+//     `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">`+
+//     `<stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>`+
+//     `<stop offset="100%" stop-color="#14b8a6" stop-opacity="0.9"/></linearGradient></defs>`+
+//     `<rect width="100%" height="100%" fill="url(#g)"/>`+
+//     `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Inter, system-ui" font-size="64" font-weight="800">${label}</text>`+
+//     `</svg>`
+//   );
+//   return `data:image/svg+xml;charset=utf-8,${svg}`;
+// }
 
-const slides = [
-  { src: placeholder('Scene · 1'), caption: '夜色城市的涟漪笔触。' },
-  { src: placeholder('Scene · 2', '#60a5fa'), caption: '水晶球中的微缩生态。' },
-  { src: placeholder('Scene · 3', '#22d3ee'), caption: '沙漠镜盒与烛火阴影。' },
-  { src: placeholder('Scene · 4', '#2dd4bf'), caption: '美食静物的质感高光。' }
-];
+// const slides = [
+//   { src: placeholder('Scene · 1'), caption: '夜色城市的涟漪笔触。' },
+//   { src: placeholder('Scene · 2', '#60a5fa'), caption: '水晶球中的微缩生态。' },
+//   { src: placeholder('Scene · 3', '#22d3ee'), caption: '沙漠镜盒与烛火阴影。' },
+//   { src: placeholder('Scene · 4', '#2dd4bf'), caption: '美食静物的质感高光。' }
+// ];
 
-const track = document.getElementById('carouselTrack');
-const viewport = track?.parentElement; // .viewport
-const progressBar = document.getElementById('carouselProgress');
-const captionEl = document.getElementById('carouselCaption');
+// const track = document.getElementById('carouselTrack');
+// const viewport = track?.parentElement; // .viewport
+// const progressBar = document.getElementById('carouselProgress');
+// const captionEl = document.getElementById('carouselCaption');
 
-slides.forEach((s, i) => {
-  const slide = document.createElement('div');
-  slide.className = 'slide';
-  const img = document.createElement('img');
-  img.src = s.src; img.alt = `slide-${i+1}`;
-  slide.appendChild(img);
-  slide.addEventListener('click', () => setIndex(i));
-  track.appendChild(slide);
-});
+// slides.forEach((s, i) => {
+//   const slide = document.createElement('div');
+//   slide.className = 'slide';
+//   const img = document.createElement('img');
+//   img.src = s.src; img.alt = `slide-${i+1}`;
+//   slide.appendChild(img);
+//   slide.addEventListener('click', () => setIndex(i));
+//   track.appendChild(slide);
+// });
 
-let index = 0;
-function centerActive() {
-  const slidesEls = Array.from(track.children);
-  slidesEls.forEach((el, i) => el.classList.toggle('active', i === index));
-  if (!viewport) return;
-  const active = slidesEls[index];
-  if (active) {
-    const vpRect = viewport.getBoundingClientRect();
-    const acRect = active.getBoundingClientRect();
-    const delta = acRect.left - vpRect.left - (vpRect.width / 2 - acRect.width / 2);
-    viewport.scrollBy({ left: delta, behavior: 'smooth' });
-  }
-}
+// let index = 0;
+// function centerActive() {
+//   const slidesEls = Array.from(track.children);
+//   slidesEls.forEach((el, i) => el.classList.toggle('active', i === index));
+//   if (!viewport) return;
+//   const active = slidesEls[index];
+//   if (active) {
+//     const vpRect = viewport.getBoundingClientRect();
+//     const acRect = active.getBoundingClientRect();
+//     const delta = acRect.left - vpRect.left - (vpRect.width / 2 - acRect.width / 2);
+//     viewport.scrollBy({ left: delta, behavior: 'smooth' });
+//   }
+// }
 
-function updateCarousel() {
-  centerActive();
-  progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
-  captionEl.textContent = slides[index]?.caption || '';
-}
-function setIndex(i) { index = (i + slides.length) % slides.length; updateCarousel(); }
+// function updateCarousel() {
+//   centerActive();
+//   progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+//   captionEl.textContent = slides[index]?.caption || '';
+// }
+// function setIndex(i) { index = (i + slides.length) % slides.length; updateCarousel(); }
 
-document.querySelector('[data-prev]').addEventListener('click', () => setIndex(index - 1));
-document.querySelector('[data-next]').addEventListener('click', () => setIndex(index + 1));
-updateCarousel();
+// document.querySelector('[data-prev]').addEventListener('click', () => setIndex(index - 1));
+// document.querySelector('[data-next]').addEventListener('click', () => setIndex(index + 1));
+// updateCarousel();
 
 // -------- 多图对比：版本选择 + 可拖动分割线 --------
 // 复用到 compare-grid 的每个对比组件
-const originalSrc = "static/image/demo-ori.png";
-const editedSrc = {
-  v1: placeholder('Edited · V1', '#22d3ee'),
-  v2: placeholder('Edited · V2', '#60a5fa'),
-  v3: placeholder('Edited · V3', '#2dd4bf')
-};
-function initCompare(compareEl) {
-  const imgOriginal = compareEl.querySelector('.js-original');
-  const imgEdited = compareEl.querySelector('.js-edited');
-  const editedWrapper = compareEl.querySelector('.edited');
-  const slider = compareEl.querySelector('.js-slider');
-  imgOriginal.src = originalSrc;
-  imgEdited.src = editedSrc.v1;
-  const setClip = (percent) => {
-    editedWrapper.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+document.addEventListener('DOMContentLoaded', () => {
+  // 简单占位图生成（如果你已经在文件其他地方定义了 placeholder 可删除此段）
+  function placeholder(label, color = '#7dd3fc') {
+    const svg = encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">` +
+      `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
+      `<stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>` +
+      `<stop offset="100%" stop-color="#14b8a6" stop-opacity="0.9"/></linearGradient></defs>` +
+      `<rect width="100%" height="100%" fill="url(#g)"/>` +
+      `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Inter, system-ui" font-size="64" font-weight="800">${label}</text>` +
+      `</svg>`
+    );
+    return `data:image/svg+xml;charset=utf-8,${svg}`;
+  }
+
+  const originalSrc = "static/image/demo-ori.png";
+  const editedSrc = {
+    v1: "static/image/demo-sam-prediction.png",
+    v2: "static/image/demo-depth-prediction.png",
+    v3: "static/image/demo-pidinet-prediction.png"
   };
-  setClip(50);
-  slider.addEventListener('input', (e) => setClip(Number(e.target.value)));
-}
 
-document.querySelectorAll('.compare').forEach(initCompare);
+  function initCompare(compareEl) {
+    if (!compareEl) return;
+    const imgOriginal = compareEl.querySelector('.js-original');
+    const imgEdited = compareEl.querySelector('.js-edited');
+    const editedWrapper = compareEl.querySelector('.edited');
+    const slider = compareEl.querySelector('.js-slider');
 
-document.getElementById('variantPicker').addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-variant]');
-  if (!btn) return;
-  const v = btn.getAttribute('data-variant');
-  document.querySelectorAll('.compare .js-edited').forEach((img) => { img.src = editedSrc[v]; });
-  btn.parentElement.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+    if (imgOriginal) imgOriginal.src = originalSrc;
+    if (imgEdited) imgEdited.src = editedSrc.v1;
+
+    const setClip = (percent) => {
+      if (editedWrapper) editedWrapper.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+      if (slider) slider.value = String(Math.round(percent));
+    };
+    setClip(50);
+
+    if (slider) {
+      slider.addEventListener('input', (e) => setClip(Number(e.target.value)));
+    }
+  }
+
+  document.querySelectorAll('.compare').forEach(initCompare);
+
+  const variantPicker = document.getElementById('variantPicker');
+  if (variantPicker) {
+    variantPicker.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-variant]');
+      if (!btn) return;
+      const v = btn.getAttribute('data-variant');
+      document.querySelectorAll('.compare .js-edited').forEach((img) => {
+        img.src = editedSrc[v] || editedSrc.v1;
+      });
+      const group = btn.parentElement;
+      if (group) group.querySelectorAll('[data-variant]').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+    });
+  }
 });
 
 // 可拖拽（鼠标/触摸）控制 slider 到 compare 容器
@@ -185,5 +215,4 @@ function bindDrag(el, onMove) {
   el.addEventListener('touchmove', (e) => { handle(e.touches[0].clientX); });
 }
 document.querySelectorAll('.compare').forEach((el) => bindDrag(el));
-
 
