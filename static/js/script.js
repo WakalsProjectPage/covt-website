@@ -150,22 +150,70 @@ document.addEventListener('DOMContentLoaded', () => {
     return `data:image/svg+xml;charset=utf-8,${svg}`;
   }
 
-  const originalSrc = "static/image/demo-ori.png";
-  const editedSrc = {
-    v1: "static/image/demo-sam-prediction.png",
-    v2: "static/image/demo-depth-prediction.png",
-    v3: "static/image/demo-pidinet-prediction.png"
+  const picker = document.getElementById('variantPicker');
+  if (picker) {
+    const panels = document.querySelectorAll('.vc-panel');
+
+    function showVariant(variant) {
+      panels.forEach(p => p.hidden = p.getAttribute('data-variant') !== variant);
+      picker.querySelectorAll('[data-variant]').forEach(b => {
+        b.setAttribute('aria-selected', String(b.getAttribute('data-variant') === variant));
+      });
+    }
+
+    picker.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-variant]');
+      if (!btn) return;
+      showVariant(btn.getAttribute('data-variant'));
+    });
+
+    picker.addEventListener('keydown', (e) => {
+      const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+      if (!keys.includes(e.key)) return;
+      const items = Array.from(picker.querySelectorAll('[data-variant]'));
+      if (!items.length) return;
+      const current = items.findIndex(i => i.getAttribute('aria-selected') === 'true');
+      let idx = current === -1 ? 0 : current;
+      if (e.key === 'ArrowLeft') idx = (idx > 0 ? idx - 1 : items.length - 1);
+      if (e.key === 'ArrowRight') idx = (idx < items.length - 1 ? idx + 1 : 0);
+      if (e.key === 'Home') idx = 0;
+      if (e.key === 'End') idx = items.length - 1;
+      items[idx].focus();
+      showVariant(items[idx].getAttribute('data-variant'));
+      e.preventDefault();
+    });
+
+    const initial = picker.querySelector('[aria-selected="true"]') || picker.querySelector('[data-variant]');
+    if (initial) showVariant(initial.getAttribute('data-variant'));
+  }
+
+  const originalSrc = {
+    v1: "static/image/demo1.png",
+    v2: "static/image/demo2.png",
+    v3: "static/image/demo3.png"
+  };
+  const editedSrcA = {
+    v1: "static/image/demo1-A.png",
+    v2: "static/image/demo2-A.png",
+    v3: "static/image/demo3-A.png"
+  };
+  const editedSrcB = {
+    v1: "static/image/demo1-B.png",
+    v2: "static/image/demo2-B.png",
+    v3: "static/image/demo3-B.png"
   };
 
   function initCompare(compareEl) {
     if (!compareEl) return;
     const imgOriginal = compareEl.querySelector('.js-original');
-    const imgEdited = compareEl.querySelector('.js-edited');
+    const imgEditedA = compareEl.querySelector('.js-editedA');
+    const imgEditedB = compareEl.querySelector('.js-editedB');
     const editedWrapper = compareEl.querySelector('.edited');
     const slider = compareEl.querySelector('.js-slider');
 
-    if (imgOriginal) imgOriginal.src = originalSrc;
-    if (imgEdited) imgEdited.src = editedSrc.v1;
+    if (imgOriginal) imgOriginal.src = originalSrc.v1;
+    if (imgEditedA) imgEditedA.src = editedSrcA.v1;
+    if (imgEditedB) imgEditedB.src = editedSrcB.v1;
 
     const setClip = (percent) => {
       if (editedWrapper) editedWrapper.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
@@ -186,8 +234,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = e.target.closest('[data-variant]');
       if (!btn) return;
       const v = btn.getAttribute('data-variant');
-      document.querySelectorAll('.compare .js-edited').forEach((img) => {
-        img.src = editedSrc[v] || editedSrc.v1;
+      document.querySelectorAll('.compare .js-editedA').forEach((img) => {
+        img.src = editedSrcA[v] || editedSrcA.v1;
+      });
+      document.querySelectorAll('.compare .js-editedB').forEach((img) => {
+        img.src = editedSrcB[v] || editedSrcB.v1;
+      });
+      document.querySelectorAll('.compare .js-original').forEach((img) => {
+        img.src = originalSrc[v] || originalSrc.v1;
       });
       const group = btn.parentElement;
       if (group) group.querySelectorAll('[data-variant]').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
