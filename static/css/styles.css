@@ -1,3 +1,7 @@
+.mobile-full {
+  width: 100%;
+  max-width: 100%;
+}
 :root {
   --bg: 222 248 255;
   --ink: 18 29 43;
@@ -22,15 +26,15 @@ body {
 /* 全局排版 */
 h1, h2, h3 { margin: 0 0 12px; letter-spacing: -0.02em; }
 .container {
-  width: min(1100px, 90vw);
+  width: min(1100px, 92vw);
   margin: 0 auto;
   padding: 0 clamp(16px, 4vw, 32px);
 }
 .main-shell {
-  width: min(1280px, 95vw);
+  width: min(1280px, 96vw);
   margin: 0 auto;
 }
-.section.narrow { max-width: min(900px, 85vw); }
+.section.narrow { max-width: min(900px, 90vw); }
 .abstract-card {
   margin: 28px auto 0;
   padding: 32px 36px;
@@ -551,7 +555,7 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
   .qa-block-wide { margin-top: 16px; }
   .compare-grid { grid-template-columns: 1fr; }
   .compare-grid[data-mode="triple"] {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 24px;
   }
   .compare-grid[data-mode="triple"] .compare-container {
@@ -582,4 +586,8 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
     width: 44px;
     height: 44px;
   }
+  .variant-copy { text-align: center; }
+  .anchor-playground,
+  .single-lab,
+  .results-module { padding: 20px; }
 }
