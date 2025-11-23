@@ -209,6 +209,40 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 30px 80px rgba(15, 23, 42, 0.25);
 }
+.single-lab {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background: rgba(248,250,255,.9);
+}
+.single-picker-wrap { display: flex; justify-content: center; }
+.single-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  align-items: center;
+}
+.single-visual {
+  margin: 0;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(15,23,42,0.12);
+}
+.single-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.single-playground .compare-container {
+  height: 100%;
+}
+.single-qa {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
 .results-figure {
   margin: 32px auto 0;
   max-width: 1100px;
@@ -276,9 +310,30 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
 .vc-panel.visible { display: block; opacity: 1; animation: fadeInPanel 0.5s ease forwards; }
 @keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.variant-row { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 32px; align-items: start; }
+.variant-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 32px;
+  align-items: center;
+}
+.variant-row-split {
+  grid-template-columns: 0.5fr 1.5fr;
+  gap: 24px;
+  align-items: center;
+}
 .variant-visual { margin: 0; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
 .variant-image { width: 100%; display: block; height: auto; } /* 防止压扁 */
+.variant-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+.variant-copy-split { display: flex; flex-direction: column; gap: 16px; justify-content: center; }
+.qa-block-wide {
+  margin-top: 20px;
+  width: 100%;
+}
 
 /* QA Block Styling (保持原样微调) */
 .qa-block { padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
@@ -294,6 +349,16 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
 .anchor-playground { padding: 24px; background: white; border-radius: 12px; }
 .anchor-playground-head { text-align: center; margin-bottom: 24px; }
 .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+.compare-grid[data-mode="dual"] [data-slot="tertiary"] { display: none; }
+.compare-grid[data-mode="triple"] {
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 20px;
+}
+.compare-grid[data-mode="triple"] [data-slot="tertiary"] { display: block; }
+.compare-grid[data-mode="triple"] .compare-container {
+  max-width: 280px;
+  margin: 0 auto;
+}
 .compare-wrap { position: relative; }
 
 .compare-container {
@@ -332,8 +397,8 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
   color: white; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); pointer-events: none;
   z-index: 2;
 }
-.label-badge.original { left: 12px; }
-.label-badge.edited { right: 12px; } /* 注意：这个在 wrapper 里，实际上是相对于 wrapper 定位 */
+.label-badge.original { left: auto; right: 12px; }
+.label-badge.edited { left: 12px; right: auto; } /* 注意：这个在 wrapper 里，实际上是相对于 wrapper 定位 */
 
 /* 拖动手柄 Handle */
 .handle {
@@ -366,6 +431,15 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
   min-height: 280px;
   display: flex;
   align-items: center;
+}
+.results-module::before {
+  content: '';
+  position: absolute;
+  top: 120px; /* anchor position for nav buttons */
+  left: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
 }
 .results-track {
   display: flex;
@@ -402,12 +476,13 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
 }
 
 .results-nav {
-  position: absolute; top: 50%; transform: translateY(-50%);
+  position: absolute;
+  top: 140px;
   width: 48px; height: 48px; border-radius: 50%; border: none;
   background: white; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
   cursor: pointer; z-index: 20; transition: all 0.2s; font-size: 24px;
 }
-.results-nav:hover { transform: translateY(-50%) scale(1.1); background: rgb(var(--teal)); color: white; }
+.results-nav:hover { transform: scale(1.1); background: rgb(var(--teal)); color: white; }
 .results-nav.prev { left: 20px; }
 .results-nav.next { right: 20px; }
 

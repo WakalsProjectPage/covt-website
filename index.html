@@ -133,6 +133,7 @@
                 <button role="tab" aria-selected="true" data-variant="v1" class="chip">Demo 1</button>
                 <button role="tab" aria-selected="false" data-variant="v2" class="chip">Demo 2</button>
                 <button role="tab" aria-selected="false" data-variant="v3" class="chip">Demo 3</button>
+                <button role="tab" aria-selected="false" data-variant="v4" class="chip">Demo 4</button>
                 </div>
             </div>
             <p class="anchor-note" style="text-align: center;">Click different demos to see how multimodal prompts drive the reasoning chain.</p>
@@ -142,7 +143,7 @@
               <div class="vc-panel anchor-panel fade-item visible" data-variant="v1">
                 <div class="variant-row">
                     <figure class="variant-visual">
-                    <img src="static/image/demo1.png" alt="demo1 visual" class="variant-image" />
+                    <img src="static/image/demos/multi/1/origin.png" alt="demo1 visual" class="variant-image" />
                     </figure>
                     <div class="variant-copy">
                     <div class="qa-block question-block">
@@ -174,7 +175,7 @@
               <div class="vc-panel anchor-panel fade-item" data-variant="v2">
                 <div class="variant-row">
                     <figure class="variant-visual">
-                    <img src="static/image/demo2.png" alt="demo2 visual" class="variant-image" />
+                    <img src="static/image/demos/multi/2/origin.jpg" alt="demo2 visual" class="variant-image" />
                     </figure>
                     <div class="variant-copy">
                     <div class="qa-block question-block">
@@ -206,7 +207,7 @@
               <div class="vc-panel anchor-panel fade-item" data-variant="v3">
                 <div class="variant-row">
                     <figure class="variant-visual">
-                    <img src="static/image/demo3.png" alt="demo3 visual" class="variant-image" />
+                    <img src="static/image/demos/multi/3/origin.jpg" alt="demo3 visual" class="variant-image" />
                     </figure>
                     <div class="variant-copy">
                     <div class="qa-block question-block">
@@ -234,6 +235,31 @@
                     </div>
                 </div>
               </div>
+
+              <div class="vc-panel anchor-panel fade-item" data-variant="v4">
+                <div class="variant-row variant-row-split">
+                    <figure class="variant-visual">
+                    <img src="static/image/demos/multi/4/origin.png" alt="demo4 visual" class="variant-image" />
+                    </figure>
+                    <div class="variant-copy variant-copy-split">
+                    <div class="qa-block question-block">
+                        <div class="qa-label qa-label-question">Question</div>
+                        <p class="qa-text">How do the segment, edge, and depth tokens jointly describe the pedestrian group near the crosswalk?</p>
+                    </div>
+                    </div>
+                </div>
+                <div class="qa-block answer-block qa-block-wide">
+                  <div class="qa-label qa-label-answer">Answer</div>
+                  <p class="qa-text">
+                    <code class="tag tag-think">&lt;Think&gt;</code>
+                    The <code class="token token-sam">&lt;SEGMENT Token&gt;</code> separates each person from the street, the <code class="token token-edge">&lt;EDGE Token&gt;</code> captures railing geometry for spatial cues, and the <code class="token token-depth">&lt;DEPTH Token&gt;</code> reveals which walkers are nearer to the curb. Together, they let the model narrate the scene with grounded spatial facts and understand motion intent.
+                    <code class="tag tag-think">&lt;/Think&gt;</code>
+                    <code class="tag tag-answer">&lt;Answer&gt;</code>
+                    The trio of tokens highlights the leading pedestrian, aligns the safety rail, and indicates the front row is closest to the roadway.
+                    <code class="tag tag-answer">&lt;/Answer&gt;</code>
+                  </p>
+                </div>
+              </div>
           </div>
 
           <div class="anchor-playground glass">
@@ -241,7 +267,7 @@
               <h3>Token Playground</h3>
               <p>Drag the slider to compare original image with visual tokens.</p>
             </div>
-            <div class="compare-grid">
+            <div class="compare-grid" id="anchorCompareGrid" data-mode="dual">
               <div class="compare-wrap" data-slot="primary">
                  <div class="compare-container js-compare-container">
                     <img class="img-back js-original" alt="Original" />
@@ -283,6 +309,82 @@
                     </div>
                  </div>
               </div>
+
+              <div class="compare-wrap" data-slot="tertiary">
+                 <div class="compare-container js-compare-container">
+                    <img class="img-back js-original" alt="Original" />
+                    <span class="label-badge original">Original</span>
+                    <div class="img-front-wrapper js-front-wrapper">
+                        <img class="img-front js-editedC" alt="Edited" />
+                    </div>
+                    <span class="label-badge edited js-visualTokenTag" data-slot="tertiary">Visual Token</span>
+                    <div class="handle js-handle">
+                        <div class="handle-line"></div>
+                        <div class="handle-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M9 6l-5 6 5 6" />
+                              <path d="M15 6l5 6-5 6" />
+                            </svg>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="single_visualization" class="section container reveal">
+        <div class="section-head">
+          <h2>Single Token Demo Visualization</h2>
+          <p>Inspect how a single visual token channel guides reasoning when compared against the raw image.</p>
+        </div>
+        <div class="single-lab glass">
+          <div class="single-picker-wrap">
+            <div class="variant-picker" id="singlePicker" role="tablist" aria-label="选择单一 token">
+              <button role="tab" aria-selected="true" data-single="s1" class="chip">Segment · Urban</button>
+              <button role="tab" aria-selected="false" data-single="s2" class="chip">Segment · Indoor</button>
+              <button role="tab" aria-selected="false" data-single="s3" class="chip">Segment · Sketch</button>
+              <button role="tab" aria-selected="false" data-single="s4" class="chip">Depth · Park</button>
+            </div>
+          </div>
+
+          <div class="single-grid">
+            <figure class="single-visual">
+              <img src="static/image/demos/single/1/origin.png" alt="Single token reference" class="single-image js-single-still" />
+              <span class="label-badge original">Original</span>
+            </figure>
+            <div class="single-playground">
+              <div class="compare-container js-compare-container">
+                <img class="img-back js-single-orig" alt="Original" />
+                <span class="label-badge original">Original</span>
+
+                <div class="img-front-wrapper js-front-wrapper">
+                  <img class="img-front js-single-token" alt="Visual Token" />
+                </div>
+                <span class="label-badge edited js-single-token-label">Segment Token</span>
+
+                <div class="handle js-handle">
+                  <div class="handle-line"></div>
+                  <div class="handle-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 6l-5 6 5 6" />
+                      <path d="M15 6l5 6-5 6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="single-qa">
+            <div class="qa-block question-block">
+              <div class="qa-label qa-label-question">Question</div>
+              <p class="qa-text" id="singleQuestion">—</p>
+            </div>
+            <div class="qa-block answer-block">
+              <div class="qa-label qa-label-answer">Answer</div>
+              <p class="qa-text" id="singleAnswer">—</p>
             </div>
           </div>
         </div>

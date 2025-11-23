@@ -149,10 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // 图片资源映射
   const assetMap = {
-    v1: { orig: "static/image/demo1.png", a: "static/image/demo1-A.png", b: "static/image/demo1-B.png", l1: "SAM", l2: "Depth" },
-    v2: { orig: "static/image/demo2.png", a: "static/image/demo2-A.png", b: "static/image/demo2-B.png", l1: "Depth", l2: "Edge" },
-    v3: { orig: "static/image/demo3.png", a: "static/image/demo3-A.png", b: "static/image/demo3-B.png", l1: "Depth", l2: "Edge" }
+    v1: { orig: "static/image/demos/multi/1/origin.png", a: "static/image/demos/multi/1/seg.png", b: "static/image/demos/multi/1/depth.png", l1: "Segment", l2: "Depth", mode: "dual" },
+    v2: { orig: "static/image/demos/multi/2/origin.jpg", a: "static/image/demos/multi/2/depth.png", b: "static/image/demos/multi/2/edge.png", l1: "Depth", l2: "Edge", mode: "dual" },
+    v3: { orig: "static/image/demos/multi/3/origin.jpg", a: "static/image/demos/multi/3/seg.png", b: "static/image/demos/multi/3/edge.png", l1: "Segment", l2: "Edge", mode: "dual" },
+    v4: { orig: "static/image/demos/multi/4/origin.png", a: "static/image/demos/multi/4/seg.png", b: "static/image/demos/multi/4/edge.png", c: "static/image/demos/multi/4/depth.png", l1: "Segment", l2: "Edge", l3: "Depth", mode: "triple" }
   };
+  const compareGrid = document.getElementById('anchorCompareGrid');
 
   function updateSliderImages(variant) {
     const data = assetMap[variant];
@@ -162,12 +164,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.js-original').forEach(img => img.src = data.orig);
     document.querySelectorAll('.js-editedA').forEach(img => img.src = data.a);
     document.querySelectorAll('.js-editedB').forEach(img => img.src = data.b);
+    document.querySelectorAll('.js-editedC').forEach(img => {
+      if (data.c) {
+        img.src = data.c;
+      }
+    });
     
     // 更新 Label
     document.querySelectorAll('.js-visualTokenTag').forEach(tag => {
       const slot = tag.getAttribute('data-slot'); // primary or secondary
-      tag.textContent = (slot === 'primary' ? data.l1 : data.l2) + " Token";
+      let label = '';
+      if (slot === 'primary') label = data.l1;
+      else if (slot === 'secondary') label = data.l2;
+      else if (slot === 'tertiary') label = data.l3;
+      if (label) {
+        tag.textContent = `${label} Token`;
+        tag.style.display = '';
+      } else {
+        tag.style.display = 'none';
+      }
     });
+
+    if (compareGrid) {
+      compareGrid.dataset.mode = data.mode === 'triple' ? 'triple' : 'dual';
+    }
   }
 
   // 初始化图片
@@ -231,6 +251,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     window.addEventListener('touchend', () => { isDragging = false; });
+  });
+});
+
+
+// -------- 3.5 Single Token Demo --------
+document.addEventListener('DOMContentLoaded', () => {
+  const singlePicker = document.getElementById('singlePicker');
+  const singleStill = document.querySelector('.js-single-still');
+  const singleOrig = document.querySelector('.js-single-orig');
+  const singleToken = document.querySelector('.js-single-token');
+  const singleLabel = document.querySelector('.js-single-token-label');
+  const singleQuestion = document.getElementById('singleQuestion');
+  const singleAnswer = document.getElementById('singleAnswer');
+
+  if (!singlePicker || !singleStill || !singleOrig || !singleToken) return;
+
+  const singleData = {
+    s1: {
+      label: 'Segment Token',
+      original: 'static/image/demos/single/1/origin.png',
+      token: 'static/image/demos/single/1/seg.png',
+      question: 'Which rooftop region is outlined by the model?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> masks the triangular glass roof, making it easy to compare its extent with the raw photo. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> The bright rooftop canopy is highlighted. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    s2: {
+      label: 'Segment Token',
+      original: 'static/image/demos/single/2/origin.png',
+      token: 'static/image/demos/single/2/seg.png',
+      question: 'Which object does the token isolate inside the room?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> traces the chair contour, suppressing the distracting background shelves. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> It singles out the lounge chair in the center. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    s3: {
+      label: 'Segment Token',
+      original: 'static/image/demos/single/3/origin.png',
+      token: 'static/image/demos/single/3/seg.png',
+      question: 'Which sketch stroke is emphasized?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> keeps only the outlined person, helping the model follow the drawn silhouette. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> The human sketch outline is highlighted. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    s4: {
+      label: 'Depth Token',
+      original: 'static/image/demos/single/4/origin.png',
+      token: 'static/image/demos/single/4/depth.png',
+      question: 'What spatial cue does the token reveal in the park scene?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-depth">&lt;DEPTH Token&gt;</code> shows a near-to-far gradient, clarifying which trees are closer. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> It highlights the foreground pathway and nearer trunks. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    }
+  };
+
+  const applySingleData = (key) => {
+    const data = singleData[key];
+    if (!data) return;
+    singleStill.src = data.original;
+    singleOrig.src = data.original;
+    singleToken.src = data.token;
+    singleLabel.textContent = `${data.label}`;
+    singleQuestion.textContent = data.question;
+    singleAnswer.innerHTML = data.answer;
+  };
+
+  applySingleData('s1');
+
+  singlePicker.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-single]');
+    if (!btn) return;
+    singlePicker.querySelectorAll('[role="tab"]').forEach(b => b.setAttribute('aria-selected', 'false'));
+    btn.setAttribute('aria-selected', 'true');
+    applySingleData(btn.getAttribute('data-single'));
   });
 });
 
