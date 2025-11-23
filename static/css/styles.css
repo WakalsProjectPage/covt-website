@@ -21,8 +21,16 @@ body {
 
 /* 全局排版 */
 h1, h2, h3 { margin: 0 0 12px; letter-spacing: -0.02em; }
-.container { width: 100%; max-width: min(1100px, 60vw); margin: 0 auto; padding: 0 24px; }
-.section.narrow { max-width: calc(min(1100px, 60vw) * 0.8); }
+.container {
+  width: min(1100px, 90vw);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 32px);
+}
+.main-shell {
+  width: min(1280px, 95vw);
+  margin: 0 auto;
+}
+.section.narrow { max-width: min(900px, 85vw); }
 .abstract-card {
   margin: 28px auto 0;
   padding: 32px 36px;
@@ -45,7 +53,7 @@ h1, h2, h3 { margin: 0 0 12px; letter-spacing: -0.02em; }
 .abstract-card strong {
   color: #111;
 }
-.main-shell { width: 100%; max-width: min(1280px, 70vw); margin: 0 auto; }
+.main-shell { width: min(1280px, 95vw); margin: 0 auto; }
 .section { padding: 96px 0; position: relative; font-size: 20px;}
 .section h2 { font-size: 32px; font-weight: 800; text-align: center; }
 .section.container::before {
@@ -53,6 +61,16 @@ h1, h2, h3 { margin: 0 0 12px; letter-spacing: -0.02em; }
   background: rgba(15, 23, 42, 0.08);
 }
 .section .section-head p { color: #556; opacity: .8; text-align: center; margin-bottom: 32px;}
+.qa-text { word-break: break-word; }
+
+@media (min-width: 1280px) {
+  .container {
+    width: min(1100px, 60vw);
+    max-width: min(1100px, 60vw);
+  }
+  .main-shell { width: min(1280px, 70vw); }
+  .section.narrow { max-width: calc(min(1100px, 60vw) * 0.85); }
+}
 
 /* 按钮通用 */
 .btn {
