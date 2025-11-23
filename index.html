@@ -10,13 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="static/css/styles.css" />
   </head>
-  <body>
-    <!-- 侧边导航触发器（移动端/窄屏） -->
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="切换目录" aria-expanded="true">
+  <body class="sidebar-collapsed">
+    
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="切换目录" aria-expanded="false">
       <span class="arrow" aria-hidden="true"></span>
     </button>
 
-    <!-- 侧边导航 -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-inner glass">
         <div class="brand">CoVT</div>
@@ -24,332 +23,314 @@
           <a href="#hero" data-ease>Teaser</a>
           <a href="#abstract" data-ease>Abstract</a>
           <a href="#method" data-ease>Method</a>
-          <!-- <a href="#gallery-single" data-ease>Gallery · Single</a> -->
-          <a href="#anchor_visualization" data-ease>Anchor Token Visualization</a>
+          <a href="#anchor_visualization" data-ease>Anchor Visualization</a>
+          <a href="#more-results" data-ease>More Results</a>
           <a href="#experiment-results" data-ease>Experiment Results</a>
         </nav>
       </div>
     </aside>
 
-    <!-- 回到顶部按钮 -->
-    <button id="backToTop" class="back-to-top" aria-label="Back to Top">⌃</button>
+    <button id="backToTop" class="back-to-top" aria-label="Back to Top">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 15l-6-6-6 6"/>
+      </svg>
+    </button>
 
-    <main>
-      <!-- 首屏 Teaser 区块 -->
+    <main class="main-shell">
       <section id="hero" class="section hero">
         <div class="hero-bg" aria-hidden="true"></div>
         <div class="hero-inner">
-          <h1 class="title">Chain-of-Visual-Thought: Teaching VLMs to See and Think Better with Continuous Visual Tokens</h1>
-          <!-- <p class="subtitle">A framework that enables VLMs to reason not only in words but also through continuous visual tokens—compact latent representations that encode rich perceptual cues. Within a small budget of roughly 20 tokens, CoVT distills knowledge from lightweight vision experts capturing complementary properties such as 2D appearance, 3D geometry, spatial layout, and edge structure.</p> -->
-
-          <div class="meta">
-            <!-- <div class="authors"></div>
-            <div class="affiliations"></div> -->
+          <h1 class="title"><span class="title-highlight">Chain-of-Visual-Thought</span>: Teaching VLMs to See and Think Better with Continuous Visual Tokens</h1>
+          <div class="author-block">
+            <p class="author-list">
+              <a href="https://wakals.github.io/" target="_blank" rel="noopener" class="author-link">Yiming Qin<sup>1</sup></a>,
+              <a href="https://github.com/David-BominWei" target="_blank" rel="noopener" class="author-link">Bomin Wei<sup>2</sup></a>,
+              <a href="https://gejiaxin.org/" target="_blank" rel="noopener" class="author-link">Jiaxin Ge<sup>1</sup></a>,
+              <a href="https://tech-ai.panasonic.com/en/researcher_introduction/048/" target="_blank" rel="noopener" class="author-link">Konstantinos Kallidromitis<sup>3</sup></a>,<br/>
+              <a href="https://stephanie-fu.github.io/" target="_blank" rel="noopener" class="author-link">Stephanie Fu<sup>1</sup></a>,
+              <a href="https://people.eecs.berkeley.edu/~trevor/" target="_blank" rel="noopener" class="author-link">Trevor Darrell<sup>1</sup></a>,
+              <a href="https://people.eecs.berkeley.edu/~xdwang/" target="_blank" rel="noopener" class="author-link">XuDong Wang<sup>1*</sup></a>
+            </p>
+            <p class="affiliation">UC Berkeley<sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UCLA<sup>2</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Panasonic AI Research<sup>3</sup></p>
+            <p class="affiliation note">*Corresponding author</p>
           </div>
-
+          <div class="meta">
+            </div>
           <div class="cta">
-            <a class="btn primary" href="#" target="_blank" rel="noopener">Paper</a>
-            <a class="btn" href="#" target="_blank" rel="noopener">arXiv</a>
-            <a class="btn" href="https://github.com/Wakals/CoMT" target="_blank" rel="noopener">Code</a>
-            <a class="btn" href="#" target="_blank" rel="noopener">HF Model</a>
-            <a class="btn" href="#" target="_blank" rel="noopener">HF Data</a>
+            <a class="btn primary" href="static/pdf/paper.pdf" target="_blank" rel="noopener">Paper</a>
+            <a class="btn btn-arxiv" href="#" target="_blank" rel="noopener">arXiv</a>
+            <a class="btn btn-code" href="https://github.com/Wakals/CoMT" target="_blank" rel="noopener">Code</a>
+            <a class="btn btn-hf-model" href="https://huggingface.co/collections/Wakals/covt-chain-of-visual-thought" target="_blank" rel="noopener">HF Model</a>
+            <a class="btn btn-hf-data" href="https://huggingface.co/datasets/Wakals/CoVT-Dataset" target="_blank" rel="noopener">HF Data</a>
           </div>
         </div>
-        
-        <figure style="background:transparent; box-shadow:none; border:none; margin:0; padding:0; display:flex; justify-content:center;">
-          <img src="static/image/teaser.png" alt="Teaser Image" style="width:65%; margin:0; display:block; border:0; box-shadow:none; background:transparent;" />
+        <figure class="teaser-figure">
+          <img src="static/image/teaser.png" alt="Teaser Image" class="teaser-image" />
         </figure>
       </section>
 
-      <!-- Abstract -->
-      <section id="abstract" class="section container reveal">
+      <section id="abstract" class="section container narrow reveal">
         <h2>Abstract</h2>
-        <p>
-          Vision–Language Models (VLMs) excel at reasoning in linguistic space but struggle with perceptual understanding that requires dense visual perception, e.g., spatial reasoning and geometric awareness.
-          This limitation stems from the fact that current VLMs have limited mechanisms to capture dense visual information across spatial dimensions.We introduce Chain-of-Visual-Thought (CoVT), a framework that enables VLMs to reason not only in words but also through continuous visual tokens—compact latent representations that encode rich perceptual cues.
-          Within a small budget of roughly 20 tokens, CoVT distills knowledge from lightweight vision experts capturing complementary properties such as 2D appearance, 3D geometry, spatial layout, and edge structure.
-          During training, the VLM with CoVTautoregressively predicts these visual tokens to reconstruct dense supervision signals (e.g., depth, segmentation, edges, and DINO features).At inference, the model reasons directly in the continuous visual token space, preserving efficiency while optionally decoding dense predictions for interpretability.
-          Evaluated across more than ten diverse perception benchmarks, including CV-Bench, MMVP, RealWorldQA, MMStar, WorldMedQA, and HRBench, integrating CoVT into strong VLMs such as Qwen2.5-VL and LLaVA consistently improves performance by 3% to 16% and demonstrates that compact continuous visual thinking enables more precise, grounded, and interpretable multimodal intelligence.
-        </p>
+        <div class="abstract-card glass">
+          <p>
+            Vision–Language Models (VLMs) excel at reasoning in linguistic space but struggle with perceptual understanding that requires dense visual perception, <em>e.g.</em>, spatial reasoning and geometric awareness. This limitation stems from the fact that current VLMs have limited mechanisms to capture dense visual information across spatial dimensions. We introduce <strong>Chain-of-Visual-Thought (CoVT)</strong>, a framework that enables VLMs to reason not only in words but also through <strong>continuous visual tokens</strong> — compact latent representations that encode rich perceptual cues. Within a small budget of roughly <strong>20 tokens</strong>, CoVT distills knowledge from lightweight vision experts capturing complementary properties such as <strong>2D appearance, 3D geometry, spatial layout, and edge structure</strong>. During training, a VLM equipped with CoVT autoregressively predicts these visual tokens to reconstruct dense supervision signals (<em>e.g.</em>, depth, segmentation, edges, and DINO features). At inference, the model reasons directly in the continuous visual-token space, preserving efficiency while optionally decoding dense predictions for interpretability. Evaluated across more than <strong>ten diverse perception benchmarks</strong>, including CV-Bench, MMVP, RealWorldQA, MMStar, WorldMedQA, and HRBench, integrating CoVT into strong VLMs such as <strong>Qwen2.5-VL</strong> and <strong>LLaVA</strong> consistently improves performance by <strong>3% to 16%</strong>, demonstrating that compact continuous visual thinking enables more precise, grounded, and interpretable multimodal intelligence.
+          </p>
+        </div>
       </section>
 
-      <!-- Method -->
       <section id="method" class="section container reveal">
-        <h2>Method</h2>
-        <p>
-          CoMT generates visual anchor tokens and then leverages these latents to condition next token prediction and reason the final answer. 
-          This is achieved by aligning the anchor tokens with "expert" model features on their corresponding tasks during training. 
-          Four kinds of anchor tasks are introduced.
-        </p>
-        <div class="card-grid">
-          <div class="card glass">
-            <h3>SAM</h3>
-            <p>SAM is for segmentation task and provides instance locations and shapes information of VLMs.</p>
-          </div>
-          <div class="card glass">
-            <h3>DepthAnything</h3>
-            <p>DepthAnything is for the depth estimation task and provides 3D perception in real-world problems.</p>
-          </div>
-          <div class="card glass">
-            <h3>PIDINet</h3>
-            <p>PIDINet is employed to extract the edge information of an image, thereby providing cues about the spatial locations of certain objects.</p>
-          </div>
-          <div class="card glass">
-            <h3>DINO</h3>
-            <p>DINO is a visual representation model for extracting image features and provides feature perception for VLMs.</p>
-          </div>
+        <div class="method-intro">
+          <h2>Method</h2>
+          <p>
+            CoMT generates visual anchor tokens and then leverages these latents to condition next-token prediction.
+          </p>
         </div>
-      </section>
-
-      <!-- 单图画廊模板 -->
-      <!-- <section id="gallery-single" class="section container reveal">
-        <div class="section-head">
-          <h2>Gallery · Single</h2>
-          <p>左右箭头切换，点击图片展示对应 caption，底部进度条反映位置。</p>
-        </div>
-        <div class="carousel glass" data-carousel>
-          <button class="nav prev" data-prev aria-label="上一张">‹</button>
-          <div class="viewport">
-            <div class="track" id="carouselTrack">
+        <div class="method-experience glass">
+          <div class="method-track" role="tablist" aria-label="Anchor token tasks">
+            <button class="method-node active" data-method="sam">
+              <span class="method-node-dot"></span>
+              <span class="method-node-label">SAM</span>
+            </button>
+            <button class="method-node" data-method="depth">
+              <span class="method-node-dot"></span>
+              <span class="method-node-label">DepthAnything</span>
+            </button>
+            <button class="method-node" data-method="pidinet">
+              <span class="method-node-dot"></span>
+              <span class="method-node-label">PIDINet</span>
+            </button>
+            <button class="method-node" data-method="dino">
+              <span class="method-node-dot"></span>
+              <span class="method-node-label">DINO</span>
+            </button>
+          </div>
+          <div class="method-detail" id="methodDetail">
+            <div id="methodContent" class="method-content fade-in">
+              <p class="method-detail-eyebrow" id="methodBadge">01 · Structured Perception</p>
+              <h3 id="methodTitle">Segment Anything · SAM</h3>
+              <p id="methodCopy">
+                SAM tokens capture object-level masks, letting CoMT reason over compact descriptors instead of raw pixels.
+              </p>
+              <ul id="methodBullets">
+                <li>Instance-aware masks delineate shapes for spatial grounding.</li>
+                <li>Mask-guided latents route attention to fine structures.</li>
+              </ul>
             </div>
           </div>
-          <button class="nav next" data-next aria-label="下一张">›</button>
-          <div class="progress"><div class="bar" id="carouselProgress"></div></div>
-          <div class="caption" id="carouselCaption">点击图片显示说明</div>
         </div>
-      </section> -->
+      </section>
 
       <section id="anchor_visualization" class="section container reveal">
         <div class="section-head">
           <h2>Anchor Token Demo Visualization</h2>
-          <p>Different visual tokens contribute complementary cues that enable the model to solve complex perceptual reasoning tasks. Here we provide a few demo visualizations for each anchor token type.</p>
+          <p>Different visual tokens contribute complementary cues that enable the model to solve complex perceptual reasoning tasks.</p>
         </div>
 
-        <div class="variant-picker" id="variantPicker" role="tablist" aria-label="选择编辑版本">
-          <button role="tab" aria-selected="true" data-variant="v1" class="chip">demo1</button>
-          <button role="tab" aria-selected="false" data-variant="v2" class="chip">demo2</button>
-          <button role="tab" aria-selected="false" data-variant="v3" class="chip">demo3</button>
-        </div>
-
-        <div class="vc-panels" id="vcPanels"></div>
-        <div class="vc-panel" data-variant="v1">
-
-
-          <div class="variant-row" style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
-            <div style="flex:0 0 28%;min-width:200px;">
-              <img src="static/image/demo1.png" alt="demo1" style="width:100%;display:block;margin:0;" />
-            </div>
-            <div style="flex:1 1 68%;min-width:200px;display:flex;align-items:center;">
-              <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
-          
-          <!-- Question block -->
-          <div class="qa-block question-block">
-            <div class="qa-label qa-label-question">Question</div>
-            <p class="qa-text">
-              Two points are circled on the image, labeled by A and B beside each circle.
-              Which point is closer to the camera?
-            </p>
-          </div>
-
-          <!-- Answer block -->
-          <div class="qa-block answer-block">
-            <div class="qa-label qa-label-answer">Answer</div>
-            <div>
-              <p class="qa-text">
-                <code class="tag tag-think">&lt;Think&gt;</code>
-                Because the segmentation of the image is
-                <code class="token token-sam">&lt;SAM Token&gt;</code>
-                and the depth map of the image is
-                <code class="token token-depth">&lt;DEPTH Token&gt;</code>
-                <code class="tag tag-think">&lt;/Think&gt;</code>
-              </p>
-              <p class="qa-text qa-text-strong">
-                <code class="tag tag-answer">&lt;Answer&gt;</code>
-                The answer is the point B.
-                <code class="tag tag-answer">&lt;/Answer&gt;</code>
-              </p>
-            </div>
-          </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="vc-panel" data-variant="v2" hidden>
-          <div class="variant-row" style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
-            <div style="flex:0 0 28%;min-width:200px;">
-              <img src="static/image/demo2.png" alt="demo1" style="width:100%;display:block;margin:0;" />
-            </div>
-            <div style="flex:1 1 68%;min-width:200px;display:flex;align-items:center;">
-              <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
-                
-                <!-- Question block -->
-                <div class="qa-block question-block">
-                  <div class="qa-label qa-label-question">Question</div>
-                  <p class="qa-text">
-                    Which object is closer to the camera taking this photo,
-                    the books (highlighted by a red box) or the chair (highlighted by a blue box)? 
-                  </p>
+        <div class="anchor-lab glass">
+          <div class="anchor-controls">
+            <div class="variant-picker-wrap">
+                <div class="variant-picker" id="variantPicker" role="tablist" aria-label="选择编辑版本">
+                <button role="tab" aria-selected="true" data-variant="v1" class="chip">Demo 1</button>
+                <button role="tab" aria-selected="false" data-variant="v2" class="chip">Demo 2</button>
+                <button role="tab" aria-selected="false" data-variant="v3" class="chip">Demo 3</button>
                 </div>
+            </div>
+            <p class="anchor-note" style="text-align: center;">Click different demos to see how multimodal prompts drive the reasoning chain.</p>
+          </div>
 
-                <!-- Answer block -->
-                <div class="qa-block answer-block">
-                  <div class="qa-label qa-label-answer">Answer</div>
-                  <div>
-                    <p class="qa-text">
-                      <code class="tag tag-think">&lt;Think&gt;</code>
-                      Because the segmentation of the image is
-                      <code class="token token-depth">&lt;DEPTH Token&gt;</code>
-                      and the depth map of the image is
-                      <code class="token token-edge">&lt;Edge Token&gt;</code>
-                      <code class="tag tag-think">&lt;/Think&gt;</code>
-                    </p>
-                    <p class="qa-text qa-text-strong">
-                      <code class="tag tag-answer">&lt;Answer&gt;</code>
-                      The <strong>books</strong> (highlighted by a red box) are closer to the camera than the chair (highlighted by a blue box).
-                      <code class="tag tag-answer">&lt;/Answer&gt;</code>
-                    </p>
-                  </div>
+          <div class="anchor-panels-container">
+              <div class="vc-panel anchor-panel fade-item visible" data-variant="v1">
+                <div class="variant-row">
+                    <figure class="variant-visual">
+                    <img src="static/image/demo1.png" alt="demo1 visual" class="variant-image" />
+                    </figure>
+                    <div class="variant-copy">
+                    <div class="qa-block question-block">
+                        <div class="qa-label qa-label-question">Question</div>
+                        <p class="qa-text">Two points are circled on the image, labeled by A and B. Which point is closer to the camera?</p>
+                    </div>
+                    <div class="qa-block answer-block">
+                        <div class="qa-label qa-label-answer">Answer</div>
+                        <div>
+                        <p class="qa-text">
+                            <code class="tag tag-think">&lt;Think&gt;</code>
+                            Because the segmentation...
+                            <code class="token token-sam">&lt;SAM Token&gt;</code>
+                            ...depth map...
+                            <code class="token token-depth">&lt;DEPTH Token&gt;</code>
+                            <code class="tag tag-think">&lt;/Think&gt;</code>
+                        </p>
+                        <p class="qa-text qa-text-strong">
+                            <code class="tag tag-answer">&lt;Answer&gt;</code>
+                            The answer is the point B.
+                            <code class="tag tag-answer">&lt;/Answer&gt;</code>
+                        </p>
+                        </div>
+                    </div>
+                    </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="vc-panel" data-variant="v3" hidden>
-          <div class="variant-row" style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
-            <div style="flex:0 0 28%;min-width:200px;">
-              <img src="static/image/demo3.png" alt="demo1" style="width:100%;display:block;margin:0;" />
-            </div>
-            <div style="flex:1 1 68%;min-width:200px;display:flex;align-items:center;">
-              <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
-                
-                <!-- Question block -->
-                <div class="qa-block question-block">
-                  <div class="qa-label qa-label-question">Question</div>
-                  <p class="qa-text">
-                    How many white vertical lines are drawn on the ground?
-                  </p>
-                </div>
-
-                <!-- Answer block -->
-                <div class="qa-block answer-block">
-                  <div class="qa-label qa-label-answer">Answer</div>
-                  <div>
-                    <p class="qa-text">
-                      <code class="tag tag-think">&lt;Think&gt;</code>
-                      Because the segmentation of the image is
-                      <code class="token token-depth">&lt;DEPTH Token&gt;</code>
-                      and the depth map of the image is
-                      <code class="token token-edge">&lt;Edge Token&gt;</code>
-                      <code class="tag tag-think">&lt;/Think&gt;</code>
-                    </p>
-                    <p class="qa-text qa-text-strong">
-                      <code class="tag tag-answer">&lt;Answer&gt;</code>
-                      There are <strong>five</strong> vertical lines in the image.
-                      <code class="tag tag-answer">&lt;/Answer&gt;</code>
-                    </p>
-                  </div>
+              <div class="vc-panel anchor-panel fade-item" data-variant="v2">
+                <div class="variant-row">
+                    <figure class="variant-visual">
+                    <img src="static/image/demo2.png" alt="demo2 visual" class="variant-image" />
+                    </figure>
+                    <div class="variant-copy">
+                    <div class="qa-block question-block">
+                        <div class="qa-label qa-label-question">Question</div>
+                        <p class="qa-text">Which object is closer to the camera: the books (red box) or the chair (blue box)?</p>
+                    </div>
+                    <div class="qa-block answer-block">
+                        <div class="qa-label qa-label-answer">Answer</div>
+                        <div>
+                        <p class="qa-text">
+                            <code class="tag tag-think">&lt;Think&gt;</code>
+                             ...segmentation...
+                            <code class="token token-depth">&lt;DEPTH Token&gt;</code>
+                            ...depth map...
+                            <code class="token token-edge">&lt;EDGE Token&gt;</code>
+                            <code class="tag tag-think">&lt;/Think&gt;</code>
+                        </p>
+                        <p class="qa-text qa-text-strong">
+                            <code class="tag tag-answer">&lt;Answer&gt;</code>
+                            The <strong>books</strong> are closer.
+                            <code class="tag tag-answer">&lt;/Answer&gt;</code>
+                        </p>
+                        </div>
+                    </div>
+                    </div>
                 </div>
               </div>
-            </div>
+              
+              <div class="vc-panel anchor-panel fade-item" data-variant="v3">
+                <div class="variant-row">
+                    <figure class="variant-visual">
+                    <img src="static/image/demo3.png" alt="demo3 visual" class="variant-image" />
+                    </figure>
+                    <div class="variant-copy">
+                    <div class="qa-block question-block">
+                        <div class="qa-label qa-label-question">Question</div>
+                        <p class="qa-text">How many white vertical lines are drawn on the ground?</p>
+                    </div>
+                    <div class="qa-block answer-block">
+                        <div class="qa-label qa-label-answer">Answer</div>
+                        <div>
+                        <p class="qa-text">
+                            <code class="tag tag-think">&lt;Think&gt;</code>
+                            ...
+                            <code class="token token-depth">&lt;DEPTH Token&gt;</code>
+                            ...
+                            <code class="token token-edge">&lt;EDGE Token&gt;</code>
+                            <code class="tag tag-think">&lt;/Think&gt;</code>
+                        </p>
+                        <p class="qa-text qa-text-strong">
+                            <code class="tag tag-answer">&lt;Answer&gt;</code>
+                            There are <strong>five</strong> vertical lines.
+                            <code class="tag tag-answer">&lt;/Answer&gt;</code>
+                        </p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+              </div>
           </div>
-        </div>
 
-        <div class="compare-grid">
-          <div class="compare glass">
-            <div class="img original">
-              <img class="js-original" alt="原图" />
-              <span class="tag">Original</span>
+          <div class="anchor-playground glass">
+            <div class="anchor-playground-head">
+              <h3>Token Playground</h3>
+              <p>Drag the slider to compare original image with visual tokens.</p>
             </div>
-            <div class="img edited">
-              <img class="js-editedA" alt="编辑图" />
-              <span class="tag js-visualTokenTagA">Visual Token</span>
-              <script>
-              (function(){
-                const tagEl = document.querySelector('.js-visualTokenTagA');
-                const picker = document.getElementById('variantPicker');
-                if (!tagEl || !picker) return;
-                const map = { v1: 'SAM Token', v2: 'Depth Token', v3: 'SAM Token' };
-                function update(variant){
-                  tagEl.textContent = map[variant] || 'Visual Token';
-                }
-                picker.addEventListener('click', (e) => {
-                  const btn = e.target.closest('[data-variant]');
-                  if (btn) update(btn.getAttribute('data-variant'));
-                });
-                const init = picker.querySelector('[aria-selected="true"]')?.getAttribute('data-variant');
-                if (init) update(init);
-              })();
-              </script>
+            <div class="compare-grid">
+              <div class="compare-wrap" data-slot="primary">
+                 <div class="compare-container js-compare-container">
+                    <img class="img-back js-original" alt="Original" />
+                    <span class="label-badge original">Original</span>
+
+                    <div class="img-front-wrapper js-front-wrapper">
+                        <img class="img-front js-editedA" alt="Edited" />
+                    </div>
+                    <span class="label-badge edited js-visualTokenTag" data-slot="primary">Visual Token</span>
+
+                    <div class="handle js-handle">
+                        <div class="handle-line"></div>
+                        <div class="handle-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M9 6l-5 6 5 6" />
+                              <path d="M15 6l5 6-5 6" />
+                            </svg>
+                        </div>
+                    </div>
+                 </div>
+              </div>
+
+              <div class="compare-wrap" data-slot="secondary">
+                 <div class="compare-container js-compare-container">
+                    <img class="img-back js-original" alt="Original" />
+                    <span class="label-badge original">Original</span>
+                    <div class="img-front-wrapper js-front-wrapper">
+                        <img class="img-front js-editedB" alt="Edited" />
+                    </div>
+                    <span class="label-badge edited js-visualTokenTag" data-slot="secondary">Visual Token</span>
+                    <div class="handle js-handle">
+                        <div class="handle-line"></div>
+                        <div class="handle-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M9 6l-5 6 5 6" />
+                              <path d="M15 6l5 6-5 6" />
+                            </svg>
+                        </div>
+                    </div>
+                 </div>
+              </div>
             </div>
-            <input type="range" class="js-slider" min="3" max="97" value="50" aria-label="对比滑块" />
-          </div>
-          <div class="compare glass">
-            <div class="img original">
-              <img class="js-original" alt="原图" />
-              <span class="tag">Original</span>
-            </div>
-            <div class="img edited">
-              <img class="js-editedB" alt="编辑图" />
-              <span class="tag js-visualTokenTagB">Visual Token</span>
-              <script>
-              (function(){
-                const tagEl = document.querySelector('.js-visualTokenTagB');
-                const picker = document.getElementById('variantPicker');
-                if (!tagEl || !picker) return;
-                const map = { v1: 'Depth Token', v2: 'Edge Token', v3: 'Edge Token' };
-                function update(variant){
-                  tagEl.textContent = map[variant] || 'Visual Token';
-                }
-                picker.addEventListener('click', (e) => {
-                  const btn = e.target.closest('[data-variant]');
-                  if (btn) update(btn.getAttribute('data-variant'));
-                });
-                const init = picker.querySelector('[aria-selected="true"]')?.getAttribute('data-variant');
-                if (init) update(init);
-              })();
-              </script>
-            </div>
-            <input type="range" class="js-slider" min="3" max="97" value="50" aria-label="对比滑块" />
           </div>
         </div>
       </section>
 
-      <!-- Experiments -->
+      <section id="more-results" class="section container reveal">
+        <div class="section-head">
+          <h2>More Results</h2>
+          <p>Click arrows to navigate through reasoning examples.</p>
+        </div>
+        <div class="results-module glass" data-results>
+          <button class="results-nav prev" data-results-prev aria-label="上一张">‹</button>
+          <div class="results-stage">
+            <div class="results-track" id="resultsTrack"></div>
+          </div>
+          <button class="results-nav next" data-results-next aria-label="下一张">›</button>
+          <div class="results-caption glass">
+            <div class="qa-block question-block compact">
+              <div class="qa-label qa-label-question">Question</div>
+              <p class="qa-text" id="resultsQuestion">—</p>
+            </div>
+            <div class="qa-block answer-block compact">
+              <div class="qa-label qa-label-answer">Answer</div>
+              <div id="resultsAnswer"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="experiment-results" class="section container reveal">
         <h2>Experiment Results</h2>
-        <p> Placeholder for experiment results images </p>
-        <img src="static/image/result_major_bench.png" alt="Result Table" style="width: 100%; display: block; margin: 0 auto;" />
+        <figure class="results-figure">
+          <img src="static/image/result_major_bench.png" alt="Result Table" class="results-image" />
+        </figure>
       </section>
 
-      <!-- 视频模块 -->
-      <!-- <section id="video" class="section container reveal">
-        <h2>Video</h2>
-        <div class="video-grid">
-          <video class="glass" controls preload="metadata" poster="" id="localVideo">
-             用户可替换 source 为真实视频文件 
-          </video>
-          <div class="glass iframe-wrap">
-            <iframe
-              id="ytEmbed"
-              title="YouTube Demo"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
-          </div>
+      <section id="bibtex" class="section container reveal">
+        <h2>BibTeX</h2>
+        <div class="code-block">
+          <pre><code>Coming soon...</code></pre>
         </div>
-      </section> -->
+      </section>
 
       <footer class="footer container">
-        <p>2025 CoMT. Crafted with ❤️ in teal & light-blue.</p>
+        <p>2025 CoMT. Crafted with ❤️.</p>
       </footer>
     </main>
 
     <script src="static/js/script.js"></script>
   </body>
-  </html>
-
-
+</html>

@@ -1,272 +1,334 @@
-// 工具：缓动滚动（非线性丝滑）
-function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-function smoothScrollTo(targetY, duration = 900) {
+// -------- 1. 工具函数与基础交互 --------
+
+function smoothScrollTo(targetY, duration = 800) {
   const startY = window.scrollY || window.pageYOffset;
   const startTime = performance.now();
   function frame(now) {
     const elapsed = (now - startTime) / duration;
     const t = Math.min(1, Math.max(0, elapsed));
-    const eased = easeInOutCubic(t);
+    // easeInOutCubic
+    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     window.scrollTo(0, startY + (targetY - startY) * eased);
     if (t < 1) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
 
-// 侧边导航折叠 & 锚点平滑
+// 侧边栏逻辑：默认 collapsed
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
+const body = document.body;
+
 sidebarToggle.addEventListener('click', () => {
-  const isNarrow = window.innerWidth <= 860;
-  if (isNarrow) {
-    const opened = sidebar.classList.toggle('open');
-    sidebarToggle.setAttribute('aria-expanded', String(opened));
-  } else {
-    const collapsed = document.body.classList.toggle('sidebar-collapsed');
-    sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
-  }
+  // 切换 class，CSS 负责动画
+  const isCollapsed = body.classList.toggle('sidebar-collapsed');
+  // 更新 aria 状态 (expanded = !collapsed)
+  sidebarToggle.setAttribute('aria-expanded', String(!isCollapsed));
 });
 
+// 锚点跳转平滑滚动
 document.querySelectorAll('a[data-ease]').forEach((a) => {
   a.addEventListener('click', (e) => {
     e.preventDefault();
-    const el = document.querySelector(a.getAttribute('href'));
+    const id = a.getAttribute('href');
+    const el = document.querySelector(id);
     if (!el) return;
-    const y = el.getBoundingClientRect().top + window.pageYOffset - 20; // 上方留白
-    smoothScrollTo(y, 900);
-    sidebar.classList.remove('open');
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // 顶部留白
+    smoothScrollTo(y);
+    
+    // 移动端点击后自动收起
+    if (window.innerWidth <= 860) {
+      body.classList.add('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', 'false');
+    }
   });
 });
 
-// 回到顶部按钮
+// 回到顶部逻辑
 const backToTop = document.getElementById('backToTop');
-backToTop.addEventListener('click', () => smoothScrollTo(0, 900));
+backToTop.addEventListener('click', () => smoothScrollTo(0));
+window.addEventListener('scroll', () => {
+  backToTop.classList.toggle('show', window.scrollY > 500);
+});
 
-function updateBackToTop() {
-  const show = window.scrollY > 600;
-  backToTop.classList.toggle('show', show);
-}
-window.addEventListener('scroll', updateBackToTop);
-updateBackToTop();
-
-// 进场动画 & 侧边栏当前章节高亮
-const tocLinks = Array.from(document.querySelectorAll('.toc a'));
-const sectionIds = tocLinks.map(a => a.getAttribute('href'));
-const sections = sectionIds.map(id => document.querySelector(id));
-
-const io = new IntersectionObserver((entries) => {
+// 进场动画 Observer
+const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) entry.target.classList.add('show');
   });
-}, { threshold: 0.15 });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
-document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+// 目录高亮 Spy
+const tocLinks = document.querySelectorAll('.toc a');
+const sectionIds = Array.from(tocLinks).map(a => a.getAttribute('href'));
+const sectionEls = sectionIds.map(id => document.querySelector(id));
 
 const spy = new IntersectionObserver((entries) => {
-  entries.forEach(({ target, isIntersecting }) => {
-    if (!isIntersecting) return;
-    const id = '#' + target.id;
-    tocLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === id));
-  });
-}, { rootMargin: '-35% 0% -60% 0%', threshold: 0 });
-
-sections.forEach((s) => s && spy.observe(s));
-
-// -------- 单图画廊：生成占位图、切换、caption 与进度条 --------
-// function placeholder(label, color = '#7dd3fc') {
-//   const svg = encodeURIComponent(
-//     `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">\n`+
-//     `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">`+
-//     `<stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>`+
-//     `<stop offset="100%" stop-color="#14b8a6" stop-opacity="0.9"/></linearGradient></defs>`+
-//     `<rect width="100%" height="100%" fill="url(#g)"/>`+
-//     `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Inter, system-ui" font-size="64" font-weight="800">${label}</text>`+
-//     `</svg>`
-//   );
-//   return `data:image/svg+xml;charset=utf-8,${svg}`;
-// }
-
-// const slides = [
-//   { src: placeholder('Scene · 1'), caption: '夜色城市的涟漪笔触。' },
-//   { src: placeholder('Scene · 2', '#60a5fa'), caption: '水晶球中的微缩生态。' },
-//   { src: placeholder('Scene · 3', '#22d3ee'), caption: '沙漠镜盒与烛火阴影。' },
-//   { src: placeholder('Scene · 4', '#2dd4bf'), caption: '美食静物的质感高光。' }
-// ];
-
-// const track = document.getElementById('carouselTrack');
-// const viewport = track?.parentElement; // .viewport
-// const progressBar = document.getElementById('carouselProgress');
-// const captionEl = document.getElementById('carouselCaption');
-
-// slides.forEach((s, i) => {
-//   const slide = document.createElement('div');
-//   slide.className = 'slide';
-//   const img = document.createElement('img');
-//   img.src = s.src; img.alt = `slide-${i+1}`;
-//   slide.appendChild(img);
-//   slide.addEventListener('click', () => setIndex(i));
-//   track.appendChild(slide);
-// });
-
-// let index = 0;
-// function centerActive() {
-//   const slidesEls = Array.from(track.children);
-//   slidesEls.forEach((el, i) => el.classList.toggle('active', i === index));
-//   if (!viewport) return;
-//   const active = slidesEls[index];
-//   if (active) {
-//     const vpRect = viewport.getBoundingClientRect();
-//     const acRect = active.getBoundingClientRect();
-//     const delta = acRect.left - vpRect.left - (vpRect.width / 2 - acRect.width / 2);
-//     viewport.scrollBy({ left: delta, behavior: 'smooth' });
-//   }
-// }
-
-// function updateCarousel() {
-//   centerActive();
-//   progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
-//   captionEl.textContent = slides[index]?.caption || '';
-// }
-// function setIndex(i) { index = (i + slides.length) % slides.length; updateCarousel(); }
-
-// document.querySelector('[data-prev]').addEventListener('click', () => setIndex(index - 1));
-// document.querySelector('[data-next]').addEventListener('click', () => setIndex(index + 1));
-// updateCarousel();
-
-// -------- 多图对比：版本选择 + 可拖动分割线 --------
-// 复用到 compare-grid 的每个对比组件
-document.addEventListener('DOMContentLoaded', () => {
-  // 简单占位图生成（如果你已经在文件其他地方定义了 placeholder 可删除此段）
-  function placeholder(label, color = '#7dd3fc') {
-    const svg = encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">` +
-      `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
-      `<stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>` +
-      `<stop offset="100%" stop-color="#14b8a6" stop-opacity="0.9"/></linearGradient></defs>` +
-      `<rect width="100%" height="100%" fill="url(#g)"/>` +
-      `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Inter, system-ui" font-size="64" font-weight="800">${label}</text>` +
-      `</svg>`
-    );
-    return `data:image/svg+xml;charset=utf-8,${svg}`;
-  }
-
-  const picker = document.getElementById('variantPicker');
-  if (picker) {
-    const panels = document.querySelectorAll('.vc-panel');
-
-    function showVariant(variant) {
-      panels.forEach(p => p.hidden = p.getAttribute('data-variant') !== variant);
-      picker.querySelectorAll('[data-variant]').forEach(b => {
-        b.setAttribute('aria-selected', String(b.getAttribute('data-variant') === variant));
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = '#' + entry.target.id;
+      tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === id);
       });
     }
+  });
+}, { rootMargin: '-20% 0% -60% 0%' });
+sectionEls.forEach(el => el && spy.observe(el));
 
+
+// -------- 2. Method 部分：淡入淡出切换 --------
+document.addEventListener('DOMContentLoaded', () => {
+  const methodButtons = document.querySelectorAll('.method-node');
+  const contentWrapper = document.getElementById('methodContent'); // 动画容器
+  
+  // 数据源
+  const methodData = {
+    sam: {
+      badge: '01 · Structured Perception',
+      title: 'Segment Anything · SAM',
+      copy: 'SAM tokens capture object-level masks, letting CoMT reason over compact descriptors instead of raw pixels.',
+      bullets: ['Instance-aware masks delineate shapes.', 'Mask-guided latents route attention to fine structures.']
+    },
+    depth: {
+      badge: '02 · Metric Awareness',
+      title: 'DepthAnything · Depth',
+      copy: 'Depth latents encode ordinal and metric cues so CoMT can reason about near/far ordering or geometric constraints.',
+      bullets: ['Stabilizes physical plausibility for counting.', 'Supplies global 3D context from limited tokens.']
+    },
+    pidinet: {
+      badge: '03 · Structural Edges',
+      title: 'PIDINet · Edge',
+      copy: 'Edge tokens capture layout primitives such as vanishing lines and silhouettes that sharpen localization.',
+      bullets: ['Highlights high-frequency details.', 'Improves reasoning on text and thin structures.']
+    },
+    dino: {
+      badge: '04 · Semantic Memory',
+      title: 'DINO · Holistic Features',
+      copy: 'DINO features compress global semantics and category-level cues that guide the final textual answer.',
+      bullets: ['Acts as memory for object-level semantics.', 'Complements geometric tokens with high-level context.']
+    }
+  };
+
+  const updateContent = (key) => {
+    const data = methodData[key];
+    if (!data) return;
+    document.getElementById('methodBadge').textContent = data.badge;
+    document.getElementById('methodTitle').textContent = data.title;
+    document.getElementById('methodCopy').textContent = data.copy;
+    document.getElementById('methodBullets').innerHTML = data.bullets.map(t => `<li>${t}</li>`).join('');
+  };
+
+  methodButtons.forEach(btn => {
+    btn.addEventListener('mouseenter', () => { // 也可以是 click
+      if (btn.classList.contains('active')) return;
+      
+      // UI State
+      methodButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Animation sequence
+      const key = btn.getAttribute('data-method');
+      contentWrapper.classList.remove('fade-in'); // 触发 fade-out
+      
+      // 等待 CSS transition (300ms) 后更新内容再 fade-in
+      setTimeout(() => {
+        updateContent(key);
+        contentWrapper.classList.add('fade-in');
+      }, 300);
+    });
+  });
+});
+
+
+// -------- 3. Anchor Visualization: Tab 切换 & 丝滑 Slider --------
+document.addEventListener('DOMContentLoaded', () => {
+  // 3.1 Tab 切换
+  const picker = document.getElementById('variantPicker');
+  const panels = document.querySelectorAll('.vc-panel');
+  
+  // 图片资源映射
+  const assetMap = {
+    v1: { orig: "static/image/demo1.png", a: "static/image/demo1-A.png", b: "static/image/demo1-B.png", l1: "SAM", l2: "Depth" },
+    v2: { orig: "static/image/demo2.png", a: "static/image/demo2-A.png", b: "static/image/demo2-B.png", l1: "Depth", l2: "Edge" },
+    v3: { orig: "static/image/demo3.png", a: "static/image/demo3-A.png", b: "static/image/demo3-B.png", l1: "Depth", l2: "Edge" }
+  };
+
+  function updateSliderImages(variant) {
+    const data = assetMap[variant];
+    if (!data) return;
+    
+    // 更新所有 slider 里的图片
+    document.querySelectorAll('.js-original').forEach(img => img.src = data.orig);
+    document.querySelectorAll('.js-editedA').forEach(img => img.src = data.a);
+    document.querySelectorAll('.js-editedB').forEach(img => img.src = data.b);
+    
+    // 更新 Label
+    document.querySelectorAll('.js-visualTokenTag').forEach(tag => {
+      const slot = tag.getAttribute('data-slot'); // primary or secondary
+      tag.textContent = (slot === 'primary' ? data.l1 : data.l2) + " Token";
+    });
+  }
+
+  // 初始化图片
+  updateSliderImages('v1');
+
+  if (picker) {
     picker.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-variant]');
       if (!btn) return;
-      showVariant(btn.getAttribute('data-variant'));
-    });
+      
+      // Button UI
+      picker.querySelectorAll('[role="tab"]').forEach(b => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+      
+      const variant = btn.getAttribute('data-variant');
+      
+      // Panel Animation: Hide all -> Show target
+      panels.forEach(p => {
+        if (p.getAttribute('data-variant') === variant) {
+          p.classList.add('visible');
+        } else {
+          p.classList.remove('visible');
+        }
+      });
 
-    picker.addEventListener('keydown', (e) => {
-      const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
-      if (!keys.includes(e.key)) return;
-      const items = Array.from(picker.querySelectorAll('[data-variant]'));
-      if (!items.length) return;
-      const current = items.findIndex(i => i.getAttribute('aria-selected') === 'true');
-      let idx = current === -1 ? 0 : current;
-      if (e.key === 'ArrowLeft') idx = (idx > 0 ? idx - 1 : items.length - 1);
-      if (e.key === 'ArrowRight') idx = (idx < items.length - 1 ? idx + 1 : 0);
-      if (e.key === 'Home') idx = 0;
-      if (e.key === 'End') idx = items.length - 1;
-      items[idx].focus();
-      showVariant(items[idx].getAttribute('data-variant'));
-      e.preventDefault();
+      // Update Slider Images
+      updateSliderImages(variant);
     });
-
-    const initial = picker.querySelector('[aria-selected="true"]') || picker.querySelector('[data-variant]');
-    if (initial) showVariant(initial.getAttribute('data-variant'));
   }
 
-  const originalSrc = {
-    v1: "static/image/demo1.png",
-    v2: "static/image/demo2.png",
-    v3: "static/image/demo3.png"
-  };
-  const editedSrcA = {
-    v1: "static/image/demo1-A.png",
-    v2: "static/image/demo2-A.png",
-    v3: "static/image/demo3-A.png"
-  };
-  const editedSrcB = {
-    v1: "static/image/demo1-B.png",
-    v2: "static/image/demo2-B.png",
-    v3: "static/image/demo3-B.png"
-  };
+  // 3.2 丝滑 Slider (JS 驱动)
+  const compareContainers = document.querySelectorAll('.js-compare-container');
+  
+  compareContainers.forEach(container => {
+    const frontWrapper = container.querySelector('.js-front-wrapper');
+    const handle = container.querySelector('.js-handle');
+    let isDragging = false;
 
-  function initCompare(compareEl) {
-    if (!compareEl) return;
-    const imgOriginal = compareEl.querySelector('.js-original');
-    const imgEditedA = compareEl.querySelector('.js-editedA');
-    const imgEditedB = compareEl.querySelector('.js-editedB');
-    const editedWrapper = compareEl.querySelector('.edited');
-    const slider = compareEl.querySelector('.js-slider');
-
-    if (imgOriginal) imgOriginal.src = originalSrc.v1;
-    if (imgEditedA) imgEditedA.src = editedSrcA.v1;
-    if (imgEditedB) imgEditedB.src = editedSrcB.v1;
-
-    const setClip = (percent) => {
-      if (editedWrapper) editedWrapper.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
-      if (slider) slider.value = String(Math.round(percent));
+    const updatePosition = (clientX) => {
+      const rect = container.getBoundingClientRect();
+      let percentage = (clientX - rect.left) / rect.width;
+      percentage = Math.max(0, Math.min(1, percentage)) * 100;
+      
+      // 1. 改变裁剪区域
+      frontWrapper.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+      // 2. 移动手柄
+      handle.style.left = `${percentage}%`;
     };
-    setClip(50);
 
-    if (slider) {
-      slider.addEventListener('input', (e) => setClip(Number(e.target.value)));
+    // Mouse Events
+    container.addEventListener('mousedown', (e) => { isDragging = true; updatePosition(e.clientX); });
+    window.addEventListener('mousemove', (e) => { if (isDragging) updatePosition(e.clientX); });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    // Touch Events
+    container.addEventListener('touchstart', (e) => { isDragging = true; updatePosition(e.touches[0].clientX); });
+    container.addEventListener('touchmove', (e) => { 
+        if (isDragging) {
+            e.preventDefault(); // 防止页面滚动
+            updatePosition(e.touches[0].clientX); 
+        }
+    });
+    window.addEventListener('touchend', () => { isDragging = false; });
+  });
+});
+
+
+// -------- 4. More Results Carousel (Logic fix) --------
+document.addEventListener('DOMContentLoaded', () => {
+  const moreResults = [
+    {
+      src: 'static/image/demos/only%20answer/benz.jpg',
+      q: 'Which car brand logo is highlighted?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> cuts out the grille, the <code class="token token-edge">&lt;EDGE Token&gt;</code> sharpens the star lines, and <code class="token token-dino">&lt;DINO Token&gt;</code> links the tri-star to Mercedes. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> It is the Mercedes-Benz emblem. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    {
+      src: 'static/image/demos/only%20answer/nyc.jpeg',
+      q: 'Which skyline is this?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-depth">&lt;DEPTH Token&gt;</code> orders the towers, <code class="token token-edge">&lt;EDGE Token&gt;</code> highlights the spire silhouettes, and <code class="token token-dino">&lt;DINO Token&gt;</code> retrieves the NYC prior. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The skyline matches Manhattan in New York City. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    {
+      src: 'static/image/demos/only%20answer/horses.jpg',
+      q: 'What subjects are tracked?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-sam">&lt;SAM Token&gt;</code> separates each animal mask, <code class="token token-flow">&lt;FLOW Token&gt;</code> explains the motion blur, and <code class="token token-depth">&lt;DEPTH Token&gt;</code> keeps herd ordering. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> Several galloping horses are being followed. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    {
+      src: 'static/image/demos/only%20answer/Christmas.jpg',
+      q: 'Which holiday is inferred?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-edge">&lt;EDGE Token&gt;</code> outlines the ornament hooks, <code class="token token-dino">&lt;DINO Token&gt;</code> recalls seasonal trees, and <code class="token token-depth">&lt;DEPTH Token&gt;</code> isolates the glowing lights. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The cues correspond to Christmas celebrations. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    {
+      src: 'static/image/demos/only%20answer/sit.jpeg',
+      q: 'What posture does the subject maintain?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-depth">&lt;DEPTH Token&gt;</code> confirms the bent knees, <code class="token token-sam">&lt;SAM Token&gt;</code> segments the chair, and <code class="token token-edge">&lt;EDGE Token&gt;</code> locks the spine alignment. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The person is seated in a relaxed upright pose. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    }
+  ];
+
+  const track = document.getElementById('resultsTrack');
+  const stage = document.querySelector('.results-stage');
+  const qEl = document.getElementById('resultsQuestion');
+  const aEl = document.getElementById('resultsAnswer');
+  
+  // 渲染 DOM
+  moreResults.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'result-card';
+    div.innerHTML = `<img src="${item.src}" draggable="false" />`;
+    div.addEventListener('click', () => { activeIndex = i; render(); });
+    track.appendChild(div);
+  });
+
+  const cards = Array.from(track.children);
+  let activeIndex = 0; // 默认第一个高亮
+
+  function centerActiveCard() {
+    if (!stage) return;
+    const activeCard = cards[activeIndex];
+    if (!activeCard) return;
+    const stageCenter = stage.clientWidth / 2;
+    const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
+    const translateX = stageCenter - cardCenter;
+    track.style.transform = `translateX(${translateX}px)`;
+  }
+
+  function render() {
+    // 1. 设置 active class
+    cards.forEach((card, i) => {
+      card.className = 'result-card'; // reset
+      if (i === activeIndex) card.classList.add('active');
+    });
+
+    // 2. 更新文字
+    const info = moreResults[activeIndex];
+    qEl.textContent = info.q;
+    aEl.innerHTML = `
+      <p class="qa-text">${info.reasoning}</p>
+      <p class="qa-text qa-text-strong">${info.answer}</p>
+    `;
+
+    centerActiveCard();
+
+    if (window.innerWidth < 768) {
+      cards[activeIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
   }
 
-  document.querySelectorAll('.compare').forEach(initCompare);
+  document.querySelector('[data-results-prev]').addEventListener('click', () => {
+    activeIndex = (activeIndex - 1 + moreResults.length) % moreResults.length;
+    render();
+  });
 
-  const variantPicker = document.getElementById('variantPicker');
-  if (variantPicker) {
-    variantPicker.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-variant]');
-      if (!btn) return;
-      const v = btn.getAttribute('data-variant');
-      document.querySelectorAll('.compare .js-editedA').forEach((img) => {
-        img.src = editedSrcA[v] || editedSrcA.v1;
-      });
-      document.querySelectorAll('.compare .js-editedB').forEach((img) => {
-        img.src = editedSrcB[v] || editedSrcB.v1;
-      });
-      document.querySelectorAll('.compare .js-original').forEach((img) => {
-        img.src = originalSrc[v] || originalSrc.v1;
-      });
-      const group = btn.parentElement;
-      if (group) group.querySelectorAll('[data-variant]').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
-    });
-  }
+  document.querySelector('[data-results-next]').addEventListener('click', () => {
+    activeIndex = (activeIndex + 1) % moreResults.length;
+    render();
+  });
+
+  render();
+  window.addEventListener('resize', centerActiveCard);
 });
-
-// 可拖拽（鼠标/触摸）控制 slider 到 compare 容器
-function bindDrag(el, onMove) {
-  let down = false;
-  const rectFor = () => el.getBoundingClientRect();
-  const handle = (clientX) => {
-    const r = rectFor();
-    const ratio = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-    const pct = Math.round(ratio * 100);
-    const slider = el.querySelector('.js-slider');
-    slider.value = pct;
-    el.querySelector('.edited').style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-    if (onMove) onMove(pct);
-  };
-  el.addEventListener('mousedown', (e) => { down = true; handle(e.clientX); });
-  el.addEventListener('mousemove', (e) => { if (down) handle(e.clientX); });
-  window.addEventListener('mouseup', () => down = false);
-  el.addEventListener('touchstart', (e) => { handle(e.touches[0].clientX); });
-  el.addEventListener('touchmove', (e) => { handle(e.touches[0].clientX); });
-}
-document.querySelectorAll('.compare').forEach((el) => bindDrag(el));
-
