@@ -95,19 +95,19 @@
           </div>
         </div>
         <div class="method-experience glass">
-          <div class="method-hint">👀 Explore how each visual token contributes to reasoning</div>
+          <div class="method-hint">👀 Explore how each type of CoVT token contributes to reasoning</div>
           <div class="method-track" role="tablist" aria-label="Anchor token tasks">
             <button class="method-node active" data-method="sam">
               <span class="method-node-dot"></span>
-              <span class="method-node-label">SAM</span>
+              <span class="method-node-label">Segmentation</span>
             </button>
             <button class="method-node" data-method="depth">
               <span class="method-node-dot"></span>
-              <span class="method-node-label">DepthAnything</span>
+              <span class="method-node-label">Depth</span>
             </button>
             <button class="method-node" data-method="pidinet">
               <span class="method-node-dot"></span>
-              <span class="method-node-label">PIDINet</span>
+              <span class="method-node-label">Edge</span>
             </button>
             <button class="method-node" data-method="dino">
               <span class="method-node-dot"></span>
@@ -116,14 +116,14 @@
           </div>
           <div class="method-detail" id="methodDetail">
             <div id="methodContent" class="method-content fade-in">
-              <p class="method-detail-eyebrow" id="methodBadge">01 · Structured Perception</p>
-              <h3 id="methodTitle">Segment Anything · SAM</h3>
+              <p class="method-detail-eyebrow" id="methodBadge">01 · 2D Perception</p>
+              <h3 id="methodTitle">Segmentation Tokens · SAM</h3>
               <p id="methodCopy">
-                SAM tokens capture object-level masks, letting CoMT reason over compact descriptors instead of raw pixels.
+                Segmentation tokens capture instance-level masks, equipping VLMs with the 2D perception capability.
               </p>
               <ul id="methodBullets">
-                <li>Instance-aware masks delineate shapes for spatial grounding.</li>
-                <li>Mask-guided latents route attention to fine structures.</li>
+                <li>8 segmenation tokens are aligned to the SAM decoder-space at the prompt-level.</li>
+                <li>During training, the decoded masks are supervised by using Hungarian Mathing algorithm, along with the cost function of dice loss and focal loss.</li>
               </ul>
             </div>
           </div>
@@ -163,7 +163,7 @@
                     <div class="variant-copy variant-copy-split">
                     <div class="qa-block question-block">
                         <div class="qa-label qa-label-question">Question</div>
-                        <p class="qa-text">How do the segment, edge, and depth tokens jointly describe the pedestrian group near the crosswalk?</p>
+                        <p class="qa-text">Describe the scene in the picture in detail, and find out how many clouds are there in the sky.</p>
                     </div>
                     </div>
                 </div>
@@ -171,10 +171,10 @@
                   <div class="qa-label qa-label-answer">Answer</div>
                   <p class="qa-text">
                     <code class="tag tag-think">&lt;Think&gt;</code>
-                    The <code class="token token-sam">&lt;SEGMENT Token&gt;</code> separates each person from the street, the <code class="token token-edge">&lt;EDGE Token&gt;</code> captures railing geometry for spatial cues, and the <code class="token token-depth">&lt;DEPTH Token&gt;</code> reveals which walkers are nearer to the curb. Together, they let the model narrate the scene with grounded spatial facts and understand motion intent.
-                    <code class="tag tag-think">&lt;/Think&gt;</code>
+                    Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>, the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>, and the edge map of the image is <code class="token token-edge">&lt;EDGE Token&gt;</code>.
+                    <code class="tag tag-think">&lt;/Think&gt;</code><br/><br/>
                     <code class="tag tag-answer">&lt;Answer&gt;</code>
-                    The trio of tokens highlights the leading pedestrian, aligns the safety rail, and indicates the front row is closest to the roadway.
+                    The image depicts a charming, handcrafted scene featuring a small doll-like figure standing on a grassy patch. The figure is dressed in an orange outfit with matching boots, and it has a cheerful expression. The doll is holding a stick with a smiling sun at the top, which appears to be made from felt or similar material. <br/>In the background, there are two green felt trees, each with a simple triangular shape and a brown trunk. Above the trees, there are four fluffy white clouds, each adorned with a brown button-like detail. The sky is painted in a soft blue color, providing a serene backdrop for the scene. <br/>The overall composition is whimsical and playful, likely intended to evoke a sense of joy and innocence. The use of bright colors and simple shapes contributes to the overall aesthetic appeal of the image. <br/>To answer the question about the number of clouds: There are <strong>four clouds</strong> visible in the sky above the trees.
                     <code class="tag tag-answer">&lt;/Answer&gt;</code>
                   </p>
                 </div>
@@ -195,15 +195,13 @@
                         <div>
                         <p class="qa-text">
                             <code class="tag tag-think">&lt;Think&gt;</code>
-                            Because the segmentation...
+                            Because the segmentation of the image is <code class="token token-seg">&lt;SEGMENT Token&gt;</code>, the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>.
                             <code class="token token-seg">&lt;SEGMENT Token&gt;</code>
-                            ...depth map...
-                            <code class="token token-depth">&lt;DEPTH Token&gt;</code>
                             <code class="tag tag-think">&lt;/Think&gt;</code>
                         </p>
                         <p class="qa-text qa-text-strong">
                             <code class="tag tag-answer">&lt;Answer&gt;</code>
-                            The answer is the point B.
+                            The answer is the <strong>point B</strong>.
                             <code class="tag tag-answer">&lt;/Answer&gt;</code>
                         </p>
                         </div>
@@ -227,15 +225,12 @@
                         <div>
                         <p class="qa-text">
                             <code class="tag tag-think">&lt;Think&gt;</code>
-                             ...segmentation...
-                            <code class="token token-depth">&lt;DEPTH Token&gt;</code>
-                            ...depth map...
-                            <code class="token token-edge">&lt;EDGE Token&gt;</code>
+                             The depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>, and the edge map of the image is <code class="token token-edge">&lt;EDGE Token&gt;</code>.
                             <code class="tag tag-think">&lt;/Think&gt;</code>
                         </p>
                         <p class="qa-text qa-text-strong">
                             <code class="tag tag-answer">&lt;Answer&gt;</code>
-                            The <strong>books</strong> are closer.
+                            The <strong>books are closer to the camera</strong> than the chair.
                             <code class="tag tag-answer">&lt;/Answer&gt;</code>
                         </p>
                         </div>
@@ -259,15 +254,12 @@
                         <div>
                         <p class="qa-text">
                             <code class="tag tag-think">&lt;Think&gt;</code>
-                            ...
-                            <code class="token token-seg">&lt;SEGMENT Token&gt;</code>
-                            ...
-                            <code class="token token-edge">&lt;EDGE Token&gt;</code>
+                            Because the segmentation of the image is <code class="token token-seg">&lt;SEGMENT Token&gt;</code>, the edge map of the image is <code class="token token-edge">&lt;EDGE Token&gt;</code>.
                             <code class="tag tag-think">&lt;/Think&gt;</code>
                         </p>
                         <p class="qa-text qa-text-strong">
                             <code class="tag tag-answer">&lt;Answer&gt;</code>
-                            There are <strong>five</strong> vertical lines.
+                            There are <strong>five white vertical lines</strong>.
                             <code class="tag tag-answer">&lt;/Answer&gt;</code>
                         </p>
                         </div>
@@ -357,10 +349,10 @@
         <div class="single-lab glass mobile-full">
           <div class="single-picker-wrap">
             <div class="variant-picker" id="singlePicker" role="tablist" aria-label="选择单一 token">
-              <button role="tab" aria-selected="true" data-single="s1" class="chip">Segment · Urban</button>
-              <button role="tab" aria-selected="false" data-single="s2" class="chip">Segment · Indoor</button>
-              <button role="tab" aria-selected="false" data-single="s3" class="chip">Segment · Sketch</button>
-              <button role="tab" aria-selected="false" data-single="s4" class="chip">Depth · Park</button>
+              <button role="tab" aria-selected="true" data-single="s1" class="chip">Demo 1</button>
+              <button role="tab" aria-selected="false" data-single="s2" class="chip">Demo 2</button>
+              <button role="tab" aria-selected="false" data-single="s3" class="chip">Demo 3</button>
+              <button role="tab" aria-selected="false" data-single="s4" class="chip">Demo 4</button>
             </div>
           </div>
 
@@ -434,15 +426,15 @@
         <div class="exp-grid">
           <figure class="exp-card exp-card-wide">
             <img src="static/image/main_exp.png" alt="Major Benchmarks" loading="lazy" />
-            <figcaption>Performance gains on major perception benchmarks.</figcaption>
+            <figcaption><strong>Comparison of CoVT with the baseline and closed-source models.</strong> CoVT delivers consistent improvements across all vision-centric benchmarks and further reveals that each visual token type contributes most effectively to the tasks related to its rich information.</figcaption>
           </figure>
           <div class="exp-card exp-card-half">
             <img src="static/image/more_exp_1.png" alt="More Experiments 1" loading="lazy" />
-            <figcaption>Chain-of-Visual-Thought improves alignment of visual and textual reasoning.</figcaption>
+            <figcaption><strong>Comparison between CoVT and Aurora based on LLaVA-v1.5-13B.</strong> &dagger; indicates our reproduced results based on the provided checkpoints.</figcaption>
           </div>
           <div class="exp-card exp-card-half">
             <img src="static/image/more_exp_2.png" alt="More Experiments 2" loading="lazy" />
-            <figcaption>Visual thinking tokens enhance both robustness and interpretability.</figcaption>
+            <figcaption>Beyond the gains on vision-centric benchmarks, CoVT also achieves slight improvements on <strong>non–vision-centric tasks</strong>.</figcaption>
           </div>
         </div>
       </section>

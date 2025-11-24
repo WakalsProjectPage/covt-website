@@ -85,28 +85,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // 数据源
   const methodData = {
     sam: {
-      badge: '01 · Structured Perception',
-      title: 'Segment Anything · SAM',
-      copy: 'SAM tokens capture object-level masks, letting CoMT reason over compact descriptors instead of raw pixels.',
-      bullets: ['Instance-aware masks delineate shapes.', 'Mask-guided latents route attention to fine structures.']
+      badge: '01 · 2D Perception',
+      title: 'Segmentation Tokens · SAM',
+      copy: 'Segmentation tokens capture instance-level masks, equipping the VLM with the 2D perception capability.',
+      bullets: ['8 segmenation tokens are aligned to the SAM decoder-space at the prompt-level.',
+         'During training, the decoded masks are supervised by using Hungarian Mathing algorithm with the ground truth masks, along with the cost function of dice loss and focal loss.']
     },
     depth: {
-      badge: '02 · Metric Awareness',
-      title: 'DepthAnything · Depth',
-      copy: 'Depth latents encode ordinal and metric cues so CoMT can reason about near/far ordering or geometric constraints.',
-      bullets: ['Stabilizes physical plausibility for counting.', 'Supplies global 3D context from limited tokens.']
+      badge: '02 · 3D Awareness',
+      title: 'Depth Tokens · Depth Anything',
+      copy: 'Depth tokens capture pixel-level depth information, equipping the VLM with the 3D perception capability.',
+      bullets: ['4 depth tokens are aligned to the Depth Anything v2 decoder-space at the prompt-level.',
+         'During training, the decoded depth map is supervised by using F1 reconstruction loss with the ground truth depth map.']
     },
     pidinet: {
-      badge: '03 · Structural Edges',
-      title: 'PIDINet · Edge',
-      copy: 'Edge tokens capture layout primitives such as vanishing lines and silhouettes that sharpen localization.',
-      bullets: ['Highlights high-frequency details.', 'Improves reasoning on text and thin structures.']
+      badge: '03 · Structure Awareness',
+      title: 'Edge Tokens · PIDINet',
+      copy: 'Edge tokens capture pixel-level geometry information, equipping the VLM with the structural perception capability.',
+      bullets: ['4 edge tokrns are aligned to the PIDINet decoder-space at the prompt-level.',
+         'During training, the decoded edge map is supervised by using F1 reconstruction loss with the ground truth edge map.']
     },
     dino: {
-      badge: '04 · Semantic Memory',
-      title: 'DINO · Holistic Features',
-      copy: 'DINO features compress global semantics and category-level cues that guide the final textual answer.',
-      bullets: ['Acts as memory for object-level semantics.', 'Complements geometric tokens with high-level context.']
+      badge: '04 · Semantic Feature',
+      title: 'DINO Tokens · DINO',
+      copy: 'DINO features compress patch-level and category-level cues that equip the VLM with semantic feature awareness.',
+      bullets: ['4 DINO tokens are aligned to the DINOv2 encoder-space at the feature-level.',
+         'During training, the DINO tokens are projected into the DINOv2 encoder-space and supervised using MSE loss with the ground truth feature.']
     }
   };
 
@@ -341,40 +345,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const singleQuestion = document.getElementById('singleQuestion');
   const singleAnswer = document.getElementById('singleAnswer');
   const singleSection = document.getElementById('single_visualization');
+  const singleGrid = document.querySelector('.single-grid');
+  const singleQa = document.querySelector('.single-qa');
 
-  if (!singlePicker || !singleStill || !singleOrig || !singleToken) return;
+  if (!singlePicker || !singleStill || !singleOrig || !singleToken || !singleGrid || !singleQa) return;
 
   const singleData = {
     s1: {
       label: 'Segment',
       original: 'static/image/demos/single/1/origin.png',
       token: 'static/image/demos/single/1/seg.png',
-      question: 'Which rooftop region is outlined by the model?',
-      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> masks the triangular glass roof, making it easy to compare its extent with the raw photo. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> The bright rooftop canopy is highlighted. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
+      question: 'How many uncut fruits are in the image?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code><br/><br/><code class="tag tag-answer">&lt;Answer&gt;</code> There are <strong>three uncut fruits</strong> in the image. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
       tokenImages: { segment: 'static/image/demos/single/1/seg.png' }
     },
     s2: {
       label: 'Segment',
       original: 'static/image/demos/single/2/origin.png',
       token: 'static/image/demos/single/2/seg.png',
-      question: 'Which object does the token isolate inside the room?',
-      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> traces the chair contour, suppressing the distracting background shelves. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> It singles out the lounge chair in the center. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
+      question: 'How many large-size numbers are on the signs on the right?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code><br/><br/><code class="tag tag-answer">&lt;Answer&gt;</code> <strong>4</strong> large-size numbers. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
       tokenImages: { segment: 'static/image/demos/single/2/seg.png' }
     },
     s3: {
       label: 'Segment',
       original: 'static/image/demos/single/3/origin.png',
       token: 'static/image/demos/single/3/seg.png',
-      question: 'Which sketch stroke is emphasized?',
-      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> keeps only the outlined person, helping the model follow the drawn silhouette. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> The human sketch outline is highlighted. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
+      question: 'Which bounding box more accurately localizes the jeans?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code><br/><br/><code class="tag tag-answer">&lt;Answer&gt;</code> The <strong>bounding box B</strong>. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
       tokenImages: { segment: 'static/image/demos/single/3/seg.png' }
     },
     s4: {
       label: 'Depth',
       original: 'static/image/demos/single/4/origin.png',
       token: 'static/image/demos/single/4/depth.png',
-      question: 'What spatial cue does the token reveal in the park scene?',
-      answer: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-depth">&lt;DEPTH Token&gt;</code> shows a near-to-far gradient, clarifying which trees are closer. <code class="tag tag-think">&lt;/Think&gt;</code><br/><code class="tag tag-answer">&lt;Answer&gt;</code> It highlights the foreground pathway and nearer trunks. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
+      question: 'Two points are circled on the image. Which one is closer to the camera?',
+      answer: `<code class="tag tag-think">&lt;Think&gt;</code> Because the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code><br/><br/><code class="tag tag-answer">&lt;Answer&gt;</code> <strong>Point B</strong> is closer to the camera. <code class="tag tag-answer">&lt;/Answer&gt;</code>`,
       tokenImages: { depth: 'static/image/demos/single/4/depth.png' }
     }
   };
@@ -391,14 +397,29 @@ document.addEventListener('DOMContentLoaded', () => {
     assignTokenPreview(singleSection, data.tokenImages);
   };
 
-  applySingleData('s1');
+  let currentKey = 's1';
+  applySingleData(currentKey);
 
   singlePicker.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-single]');
     if (!btn) return;
+
+    const nextKey = btn.getAttribute('data-single');
+    if (!nextKey || nextKey === currentKey) return;
+
     singlePicker.querySelectorAll('[role="tab"]').forEach(b => b.setAttribute('aria-selected', 'false'));
     btn.setAttribute('aria-selected', 'true');
-    applySingleData(btn.getAttribute('data-single'));
+
+    // 丝滑淡出 -> 更新内容 -> 淡入
+    singleGrid.classList.add('single-fade');
+    singleQa.classList.add('single-fade');
+
+    setTimeout(() => {
+      currentKey = nextKey;
+      applySingleData(currentKey);
+      singleGrid.classList.remove('single-fade');
+      singleQa.classList.remove('single-fade');
+    }, 180);
   });
 });
 
@@ -408,45 +429,45 @@ document.addEventListener('DOMContentLoaded', () => {
   const moreResults = [
     {
       src: 'static/image/demos/only%20answer/benz.jpg',
-      q: 'Which car brand logo is highlighted?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-sam">&lt;SAM Token&gt;</code> cuts out the grille, the <code class="token token-edge">&lt;EDGE Token&gt;</code> sharpens the star lines, and <code class="token token-dino">&lt;DINO Token&gt;</code> links the tri-star to Mercedes. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> It is the Mercedes-Benz emblem. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'The picture shows many cars of the same brand, so what brand is this?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>, and the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> Mercedes-Benz. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     },
     {
       src: 'static/image/demos/only%20answer/nyc.jpeg',
-      q: 'Which skyline is this?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-depth">&lt;DEPTH Token&gt;</code> orders the towers, <code class="token token-edge">&lt;EDGE Token&gt;</code> highlights the spire silhouettes, and <code class="token token-dino">&lt;DINO Token&gt;</code> retrieves the NYC prior. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The skyline matches Manhattan in New York City. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'What is the man in the picture holding? Where in New York City is he standing?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>, and the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The man in the picture is holding a banana. He is standing on a street in New York City, likely Times Square or another busy area with tall buildings and advertisements in the background. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     },
     {
       src: 'static/image/demos/only%20answer/horses.jpg',
-      q: 'What subjects are tracked?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-sam">&lt;SAM Token&gt;</code> separates each animal mask, <code class="token token-flow">&lt;FLOW Token&gt;</code> explains the motion blur, and <code class="token token-depth">&lt;DEPTH Token&gt;</code> keeps herd ordering. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> Several galloping horses are being followed. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'What is the background of the horses in the image?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>, the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>, and the perception feature of the image is <code class="token token-dino">&lt;DINO Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The background of the horses in the image consists of a beautiful mountain range with snow-capped peaks, creating a picturesque scene. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     },
     {
       src: 'static/image/demos/only%20answer/Christmas.jpg',
-      q: 'Which holiday is inferred?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-edge">&lt;EDGE Token&gt;</code> outlines the ornament hooks, <code class="token token-dino">&lt;DINO Token&gt;</code> recalls seasonal trees, and <code class="token token-depth">&lt;DEPTH Token&gt;</code> isolates the glowing lights. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The cues correspond to Christmas celebrations. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'This is a picture of a cozy Christmas interior decoration. Please answer the question: What is the instance furthest from the camera lens in this picture?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>, and the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The instance furthest from the camera lens in this picture is the Christmas tree. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     },
     {
       src: 'static/image/demos/only%20answer/sit.jpeg',
-      q: 'What posture does the subject maintain?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-depth">&lt;DEPTH Token&gt;</code> confirms the bent knees, <code class="token token-sam">&lt;SAM Token&gt;</code> segments the chair, and <code class="token token-edge">&lt;EDGE Token&gt;</code> locks the spine alignment. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The person is seated in a relaxed upright pose. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'What is the beautiful woman sitting on in the picture?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>, and the depth map of the image is <code class="token token-depth">&lt;DEPTH Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The beautiful woman is sitting on the hood of a white car. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     },
     {
       src: 'static/image/demos/only%20answer/persons.jpg',
-      q: 'How many pedestrians are acknowledged by the model?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-sam">&lt;SEGMENT Token&gt;</code> isolates each walking figure, while <code class="token token-depth">&lt;DEPTH Token&gt;</code> keeps near/far ordering so the narration counts from front to back. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> It reports that four pedestrians are moving through the crosswalk. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'How many men are facing the camera in the picture?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> 2. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     },
     {
       src: 'static/image/demos/only%20answer/worrior.jpg',
-      q: 'Which armor detail does the model emphasize?',
-      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-edge">&lt;EDGE Token&gt;</code> sharpens metallic contours and the <code class="token token-dino">&lt;DINO Token&gt;</code> retrieves prior knowledge about warrior garb to describe the shoulder plates. <code class="tag tag-think">&lt;/Think&gt;</code>`,
-      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> It highlights the intricate shoulder armor worn by the warrior. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+      q: 'In the NBA basketball game shown in the picture, which team is leading?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> Because the segmentation of the image is <code class="token token-sam">&lt;SEGMENT Token&gt;</code>. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The Golden State Warriors are leading with a score of 107 to the Houston Rockets' 106. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     }
   ];
 

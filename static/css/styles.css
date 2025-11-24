@@ -244,6 +244,7 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 32px;
   align-items: center;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .single-visual {
   margin: 0;
@@ -264,6 +265,11 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.single-fade {
+  opacity: 0;
+  transform: translateY(6px);
 }
 .results-figure {
   margin: 32px auto 0;
