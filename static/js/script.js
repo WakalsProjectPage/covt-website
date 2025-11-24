@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
       popover.classList.remove('above', 'below');
       popover.removeEventListener('transitionend', onTransitionEnd);
     };
-    popover.addEventListener('transitionend', onTransitionEnd);
+    popover.addEventListener('transitionend', onTransitionEnd, { once: true });
     activeToken = null;
   }
 
@@ -543,10 +543,23 @@ document.addEventListener('DOMContentLoaded', () => {
   function showPopover(token) {
     const img = token.dataset.tokenImg;
     if (!img) return;
-    activeToken = token;
-    popImg.src = img;
-    popover.classList.add('show');
-    requestAnimationFrame(() => positionPopover(token));
+    const proceed = () => {
+      activeToken = token;
+      popImg.src = img;
+      popover.classList.add('show');
+      requestAnimationFrame(() => positionPopover(token));
+    };
+
+    if (popover.classList.contains('show')) {
+      const onTransitionEnd = () => {
+        popover.removeEventListener('transitionend', onTransitionEnd);
+        proceed();
+      };
+      popover.addEventListener('transitionend', onTransitionEnd, { once: true });
+      popover.classList.remove('show');
+    } else {
+      proceed();
+    }
   }
 
   popImg.addEventListener('load', () => {
