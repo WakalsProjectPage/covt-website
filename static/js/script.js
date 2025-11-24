@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (slot === 'secondary') label = data.l2;
       else if (slot === 'tertiary') label = data.l3;
       if (label) {
-        tag.textContent = `${label} Token`;
+        tag.textContent = `${label}`;
         tag.style.display = '';
       } else {
         tag.style.display = 'none';
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 初始化图片
-  updateSliderImages('v1');
+  updateSliderImages('v4');
 
   if (picker) {
     picker.addEventListener('click', (e) => {
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const singleData = {
     s1: {
-      label: 'Segment Token',
+      label: 'Segment',
       original: 'static/image/demos/single/1/origin.png',
       token: 'static/image/demos/single/1/seg.png',
       question: 'Which rooftop region is outlined by the model?',
@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tokenImages: { segment: 'static/image/demos/single/1/seg.png' }
     },
     s2: {
-      label: 'Segment Token',
+      label: 'Segment',
       original: 'static/image/demos/single/2/origin.png',
       token: 'static/image/demos/single/2/seg.png',
       question: 'Which object does the token isolate inside the room?',
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tokenImages: { segment: 'static/image/demos/single/2/seg.png' }
     },
     s3: {
-      label: 'Segment Token',
+      label: 'Segment',
       original: 'static/image/demos/single/3/origin.png',
       token: 'static/image/demos/single/3/seg.png',
       question: 'Which sketch stroke is emphasized?',
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tokenImages: { segment: 'static/image/demos/single/3/seg.png' }
     },
     s4: {
-      label: 'Depth Token',
+      label: 'Depth',
       original: 'static/image/demos/single/4/origin.png',
       token: 'static/image/demos/single/4/depth.png',
       question: 'What spatial cue does the token reveal in the park scene?',
@@ -435,6 +435,18 @@ document.addEventListener('DOMContentLoaded', () => {
       q: 'What posture does the subject maintain?',
       reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-depth">&lt;DEPTH Token&gt;</code> confirms the bent knees, <code class="token token-sam">&lt;SAM Token&gt;</code> segments the chair, and <code class="token token-edge">&lt;EDGE Token&gt;</code> locks the spine alignment. <code class="tag tag-think">&lt;/Think&gt;</code>`,
       answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> The person is seated in a relaxed upright pose. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    {
+      src: 'static/image/demos/only%20answer/persons.jpg',
+      q: 'How many pedestrians are acknowledged by the model?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> <code class="token token-sam">&lt;SEGMENT Token&gt;</code> isolates each walking figure, while <code class="token token-depth">&lt;DEPTH Token&gt;</code> keeps near/far ordering so the narration counts from front to back. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> It reports that four pedestrians are moving through the crosswalk. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
+    },
+    {
+      src: 'static/image/demos/only%20answer/worrior.jpg',
+      q: 'Which armor detail does the model emphasize?',
+      reasoning: `<code class="tag tag-think">&lt;Think&gt;</code> The <code class="token token-edge">&lt;EDGE Token&gt;</code> sharpens metallic contours and the <code class="token token-dino">&lt;DINO Token&gt;</code> retrieves prior knowledge about warrior garb to describe the shoulder plates. <code class="tag tag-think">&lt;/Think&gt;</code>`,
+      answer: `<code class="tag tag-answer">&lt;Answer&gt;</code> It highlights the intricate shoulder armor worn by the warrior. <code class="tag tag-answer">&lt;/Answer&gt;</code>`
     }
   ];
 
@@ -453,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const cards = Array.from(track.children);
-  let activeIndex = 0; // 默认第一个高亮
+  let activeIndex = 3; // 默认第4个高亮（Christmas）
 
   function centerActiveCard() {
     if (!stage) return;

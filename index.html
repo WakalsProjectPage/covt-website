@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoVT — Project Page</title>
     <meta name="description" content="AI Paper Project Page" />
+    <link rel="icon" href="static/image/logo.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -79,13 +80,22 @@
       </section>
 
       <section id="method" class="section container reveal">
-        <div class="method-intro">
+        <div class="section-head">
           <h2>Method</h2>
           <p>
-            CoMT generates visual anchor tokens and then leverages these latents to condition next-token prediction.
+            CoVT generates interleaved discrete (textual) and continuous (visual) thinking tokens first, and then leverages these thinking tokens to condition next-token prediction and reason the final answer.
           </p>
         </div>
+        <div class="method-visual glass">
+          <img src="static/image/method.png" alt="CoVT Method Overview" class="method-visual-image" loading="lazy" />
+          <div class="method-visual-note">
+            <p>
+              <strong>The training pipeline of CoVT.</strong> CoVT first generates the thinking process, containing visual thinking tokens, and then leverages these visual thoughts to condition next-token prediction and reason the final answer. To endow these tokens with perceptual meaning, we align them with lightweight vision experts (SAM, DepthAnything, PIDINet, DINO) on their respective tasks during training. Specifically: SAM uses 8 visual tokens as mask prompts; DepthAnything uses 4 tokens to reconstruct depth; PIDINet uses 4 tokens to reconstruct edges; and DINO uses 4 tokens to match patch-level features. The VLM is finetuned with LoRA and all projection layers are trainable. <em>Note: During inference, dense predictions are decoded only when interpretability is desired; otherwise, reasoning occurs entirely in the latent visual space.</em>
+            </p>
+          </div>
+        </div>
         <div class="method-experience glass">
+          <div class="method-hint">👀 Explore how each visual token contributes to reasoning</div>
           <div class="method-track" role="tablist" aria-label="Anchor token tasks">
             <button class="method-node active" data-method="sam">
               <span class="method-node-dot"></span>
@@ -122,25 +132,55 @@
 
       <section id="anchor_visualization" class="section container reveal">
         <div class="section-head">
-          <h2>Anchor Token Demo Visualization</h2>
-          <p>Different visual tokens contribute complementary cues that enable the model to solve complex perceptual reasoning tasks.</p>
+          <h2>Multiple CoVT Tokens Visualization</h2>
+          <p>Different CoVT tokens contribute complementary cues that enable the model to solve complex perceptual reasoning tasks.</p>
         </div>
 
         <div class="anchor-lab glass">
           <div class="anchor-controls">
             <div class="variant-picker-wrap">
                 <div class="variant-picker" id="variantPicker" role="tablist" aria-label="选择编辑版本">
-                <button role="tab" aria-selected="true" data-variant="v1" class="chip">Demo 1</button>
-                <button role="tab" aria-selected="false" data-variant="v2" class="chip">Demo 2</button>
-                <button role="tab" aria-selected="false" data-variant="v3" class="chip">Demo 3</button>
-                <button role="tab" aria-selected="false" data-variant="v4" class="chip">Demo 4</button>
+                <button role="tab" aria-selected="true" data-variant="v4" class="chip">Demo 1</button>
+                <button role="tab" aria-selected="false" data-variant="v1" class="chip">Demo 2</button>
+                <button role="tab" aria-selected="false" data-variant="v2" class="chip">Demo 3</button>
+                <button role="tab" aria-selected="false" data-variant="v3" class="chip">Demo 4</button>
                 </div>
             </div>
-            <p class="anchor-note" style="text-align: center;">Click different demos to see how multimodal prompts drive the reasoning chain.</p>
+            <p class="anchor-note"
+              style="text-align: center; padding: 12px 18px; 
+                      background: linear-gradient(90deg, #e6f9ff, #ffffff); 
+                      border-left: 4px solid #3be3f6; font-weight: 600;">
+              Click different <code class="tag tag-visual-token">&lt;CoVT Tokens&gt;</code> to view the decoded visualization results.
+            </p>
           </div>
 
           <div class="anchor-panels-container">
-              <div class="vc-panel anchor-panel fade-item visible" data-variant="v1">
+              <div class="vc-panel anchor-panel fade-item visible" data-variant="v4">
+                <div class="variant-row variant-row-split">
+                    <figure class="variant-visual">
+                    <img src="static/image/demos/multi/4/origin.png" alt="demo1 visual" class="variant-image" />
+                    </figure>
+                    <div class="variant-copy variant-copy-split">
+                    <div class="qa-block question-block">
+                        <div class="qa-label qa-label-question">Question</div>
+                        <p class="qa-text">How do the segment, edge, and depth tokens jointly describe the pedestrian group near the crosswalk?</p>
+                    </div>
+                    </div>
+                </div>
+                <div class="qa-block answer-block qa-block-wide">
+                  <div class="qa-label qa-label-answer">Answer</div>
+                  <p class="qa-text">
+                    <code class="tag tag-think">&lt;Think&gt;</code>
+                    The <code class="token token-sam">&lt;SEGMENT Token&gt;</code> separates each person from the street, the <code class="token token-edge">&lt;EDGE Token&gt;</code> captures railing geometry for spatial cues, and the <code class="token token-depth">&lt;DEPTH Token&gt;</code> reveals which walkers are nearer to the curb. Together, they let the model narrate the scene with grounded spatial facts and understand motion intent.
+                    <code class="tag tag-think">&lt;/Think&gt;</code>
+                    <code class="tag tag-answer">&lt;Answer&gt;</code>
+                    The trio of tokens highlights the leading pedestrian, aligns the safety rail, and indicates the front row is closest to the roadway.
+                    <code class="tag tag-answer">&lt;/Answer&gt;</code>
+                  </p>
+                </div>
+              </div>
+
+              <div class="vc-panel anchor-panel fade-item" data-variant="v1">
                 <div class="variant-row">
                     <figure class="variant-visual">
                     <img src="static/image/demos/multi/1/origin.png" alt="demo1 visual" class="variant-image" />
@@ -156,7 +196,7 @@
                         <p class="qa-text">
                             <code class="tag tag-think">&lt;Think&gt;</code>
                             Because the segmentation...
-                            <code class="token token-sam">&lt;SAM Token&gt;</code>
+                            <code class="token token-seg">&lt;SEGMENT Token&gt;</code>
                             ...depth map...
                             <code class="token token-depth">&lt;DEPTH Token&gt;</code>
                             <code class="tag tag-think">&lt;/Think&gt;</code>
@@ -207,7 +247,7 @@
               <div class="vc-panel anchor-panel fade-item" data-variant="v3">
                 <div class="variant-row">
                     <figure class="variant-visual">
-                    <img src="static/image/demos/multi/3/origin.jpg" alt="demo3 visual" class="variant-image" />
+                    <img src="static/image/demos/multi/3/origin.jpg" alt="demo4 visual" class="variant-image" />
                     </figure>
                     <div class="variant-copy">
                     <div class="qa-block question-block">
@@ -220,7 +260,7 @@
                         <p class="qa-text">
                             <code class="tag tag-think">&lt;Think&gt;</code>
                             ...
-                            <code class="token token-depth">&lt;DEPTH Token&gt;</code>
+                            <code class="token token-seg">&lt;SEGMENT Token&gt;</code>
                             ...
                             <code class="token token-edge">&lt;EDGE Token&gt;</code>
                             <code class="tag tag-think">&lt;/Think&gt;</code>
@@ -235,37 +275,12 @@
                     </div>
                 </div>
               </div>
-
-              <div class="vc-panel anchor-panel fade-item" data-variant="v4">
-                <div class="variant-row variant-row-split">
-                    <figure class="variant-visual">
-                    <img src="static/image/demos/multi/4/origin.png" alt="demo4 visual" class="variant-image" />
-                    </figure>
-                    <div class="variant-copy variant-copy-split">
-                    <div class="qa-block question-block">
-                        <div class="qa-label qa-label-question">Question</div>
-                        <p class="qa-text">How do the segment, edge, and depth tokens jointly describe the pedestrian group near the crosswalk?</p>
-                    </div>
-                    </div>
-                </div>
-                <div class="qa-block answer-block qa-block-wide">
-                  <div class="qa-label qa-label-answer">Answer</div>
-                  <p class="qa-text">
-                    <code class="tag tag-think">&lt;Think&gt;</code>
-                    The <code class="token token-sam">&lt;SEGMENT Token&gt;</code> separates each person from the street, the <code class="token token-edge">&lt;EDGE Token&gt;</code> captures railing geometry for spatial cues, and the <code class="token token-depth">&lt;DEPTH Token&gt;</code> reveals which walkers are nearer to the curb. Together, they let the model narrate the scene with grounded spatial facts and understand motion intent.
-                    <code class="tag tag-think">&lt;/Think&gt;</code>
-                    <code class="tag tag-answer">&lt;Answer&gt;</code>
-                    The trio of tokens highlights the leading pedestrian, aligns the safety rail, and indicates the front row is closest to the roadway.
-                    <code class="tag tag-answer">&lt;/Answer&gt;</code>
-                  </p>
-                </div>
-              </div>
           </div>
 
           <div class="anchor-playground glass">
             <div class="anchor-playground-head">
               <h3>Token Playground</h3>
-              <p>Drag the slider to compare original image with visual tokens.</p>
+              <p>Drag the slider to view the decoded visualization results.</p>
             </div>
             <div class="compare-grid" id="anchorCompareGrid" data-mode="dual">
               <div class="compare-wrap" data-slot="primary">
@@ -336,8 +351,8 @@
 
       <section id="single_visualization" class="section container reveal">
         <div class="section-head">
-          <h2>Single Token Demo Visualization</h2>
-          <p>Inspect how a single visual token channel guides reasoning when compared against the raw image.</p>
+          <h2>Single CoVT Token Visualization</h2>
+          <p>Inspect how a single type of CoVT token guides reasoning.</p>
         </div>
         <div class="single-lab glass mobile-full">
           <div class="single-picker-wrap">
@@ -392,7 +407,7 @@
 
       <section id="more-results" class="section container reveal">
         <div class="section-head">
-          <h2>More Results</h2>
+          <h2>Gallery</h2>
           <p>Click arrows to navigate through reasoning examples.</p>
         </div>
           <div class="results-module glass mobile-full" data-results>
@@ -416,9 +431,20 @@
 
       <section id="experiment-results" class="section container reveal">
         <h2>Experiment Results</h2>
-        <figure class="results-figure">
-          <img src="static/image/result_major_bench.png" alt="Result Table" class="results-image" />
-        </figure>
+        <div class="exp-grid">
+          <figure class="exp-card exp-card-wide">
+            <img src="static/image/main_exp.png" alt="Major Benchmarks" loading="lazy" />
+            <figcaption>Performance gains on major perception benchmarks.</figcaption>
+          </figure>
+          <div class="exp-card exp-card-half">
+            <img src="static/image/more_exp_1.png" alt="More Experiments 1" loading="lazy" />
+            <figcaption>Chain-of-Visual-Thought improves alignment of visual and textual reasoning.</figcaption>
+          </div>
+          <div class="exp-card exp-card-half">
+            <img src="static/image/more_exp_2.png" alt="More Experiments 2" loading="lazy" />
+            <figcaption>Visual thinking tokens enhance both robustness and interpretability.</figcaption>
+          </div>
+        </div>
       </section>
 
       <section id="bibtex" class="section container reveal">
@@ -429,7 +455,29 @@
       </section>
 
       <footer class="footer container">
-        <p>2025 CoMT. Crafted with ❤️.</p>
+        <p>2025 CoVT. Crafted with ❤️.</p>
+        <div class="footer-links">
+          <a href="#" aria-label="arXiv" class="footer-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h4l4 6 4-6h4l-6.5 9.5L21 20h-4l-5-6.5L7 20H3l7.5-10.5z"/>
+            </svg>
+          </a>
+          <a href="https://github.com/Wakals/CoMT" target="_blank" rel="noopener" aria-label="GitHub" class="footer-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1 3 .8.1-.7.3-1 .6-1.3-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3 0 0 1-.3 3.2 1.2a10.9 10.9 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.5.2 2.7.1 3 .8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.7 1 .7 2v3c0 .3.2.7.8.6A12 12 0 0 0 12 .5"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Zhihu" class="footer-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4.2 4h15.5c.5 0 .8.3.8.7v14.6c0 .4-.3.7-.8.7H4.2c-.5 0-.8-.3-.8-.7V4.7c0-.4.3-.7.8-.7zm2.7 9.8h1.7l.4-1.5h2.4l.4 1.5h1.7l-2.6-8h-1.4zm2.5-2.9.8-2.8.8 2.8zm5.9 4.6c1.2 0 2.3-.6 2.9-1.5l-1.1-.7a1.5 1.5 0 0 1-1.8.6c-.6-.2-1-.7-1-1.3 0-.8.7-1.5 1.6-1.5.4 0 .8.2 1 .4l1.1-.7a3 3 0 0 0-2-.7 3 3 0 0 0-3 2.5c-.4 1.6.6 3 2.3 3z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="X" class="footer-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 3h4.6l4.2 5.8L15.8 3H21l-6.6 8.7L21.5 21h-4.6l-4.6-6.3L7.4 21H3.1l7-9.2z"/>
+            </svg>
+          </a>
+        </div>
       </footer>
     </main>
 
