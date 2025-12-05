@@ -714,6 +714,30 @@ body.sidebar-collapsed .sidebar { transform: translateX(-280px); }
 .qa-block.compact .qa-text { margin: 0; font-size: 18px; }
 .qa-block.compact code { font-size: 14px; }
 
+.code-block {
+  margin: 32px auto 0;
+  max-width: 780px;
+  background: #f3f4f6;
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+  overflow-x: auto;
+}
+
+.code-block pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #111827;
+  white-space: pre;
+}
+
+.code-block code {
+  font-family: inherit;
+}
+
 .footer {
   text-align: center;
   padding-bottom: 40px;
