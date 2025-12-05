@@ -1,6 +1,6 @@
 # CoMT Website
 
-> https://wakalsprojectpage.github.io/comt-website/
+> https://wakalsprojectpage.github.io/covt-website/
 
 
 ## PNG List
