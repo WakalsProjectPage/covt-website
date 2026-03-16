@@ -8,7 +8,7 @@
     <link rel="icon" href="static/image/logo.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="static/css/styles.css" />
   </head>
   <body class="sidebar-collapsed">
@@ -422,20 +422,584 @@
       </section>
 
       <section id="experiment-results" class="section container reveal">
-        <h2>Experiment Results</h2>
+        <div class="section-head">
+          <h2>Experiment Results</h2>
+          <p>The same three result figures are now rendered directly in HTML with semantic tables and tiny benchmark charts.</p>
+        </div>
         <div class="exp-grid">
-          <figure class="exp-card exp-card-wide">
-            <img src="static/image/main_exp.png" alt="Major Benchmarks" loading="lazy" />
-            <figcaption><strong>Comparison of CoVT with the baseline and closed-source models.</strong> CoVT delivers consistent improvements across all vision-centric benchmarks and further reveals that each visual token type contributes most effectively to the tasks related to its rich information.</figcaption>
-          </figure>
-          <div class="exp-card exp-card-half">
-            <img src="static/image/more_exp_1.png" alt="More Experiments 1" loading="lazy" />
-            <figcaption><strong>Comparison between CoVT and Aurora based on LLaVA-v1.5-13B.</strong> &dagger; indicates our reproduced results based on the provided checkpoints.</figcaption>
-          </div>
-          <div class="exp-card exp-card-half">
-            <img src="static/image/more_exp_2.png" alt="More Experiments 2" loading="lazy" />
-            <figcaption>Beyond the gains on vision-centric benchmarks, CoVT also achieves slight improvements on <strong>non–vision-centric tasks</strong>.</figcaption>
-          </div>
+          <article class="exp-card exp-card-wide exp-card-major">
+            <div class="exp-card-head">
+              <div>
+                <span class="exp-kicker">Main Result</span>
+                <h3>Major Benchmarks</h3>
+              </div>
+              <p class="exp-card-lead">Comparison of CoVT with the baseline and closed-source models across CV-Bench and other vision-centric benchmarks.</p>
+            </div>
+            <div class="exp-chip-row">
+              <span class="exp-chip exp-chip-sky">3 tokens: +5.5 on CV-Bench</span>
+              <span class="exp-chip exp-chip-lime">4 tokens: 89.2 on CV depth</span>
+              <span class="exp-chip exp-chip-peach">Best HRBench-8K: 69.9</span>
+            </div>
+            <div class="exp-table-wrap">
+              <table class="exp-table exp-table-major">
+                <thead>
+                  <tr>
+                    <th rowspan="2" class="exp-label-col">Setting</th>
+                    <th colspan="4">Visual tokens</th>
+                    <th colspan="4">CV-Bench</th>
+                    <th colspan="9">Other vision-centric benchmarks</th>
+                  </tr>
+                  <tr>
+                    <th>Seg</th>
+                    <th>Depth</th>
+                    <th>DINO</th>
+                    <th>Edge</th>
+                    <th>CVBench</th>
+                    <th>Count</th>
+                    <th>Depth</th>
+                    <th>Dist.</th>
+                    <th>BLINK</th>
+                    <th>RW-QA</th>
+                    <th>MMT</th>
+                    <th>MMStar-P</th>
+                    <th>MMVP</th>
+                    <th>MME-RW</th>
+                    <th>V*</th>
+                    <th>HR<sub>4K</sub></th>
+                    <th>HR<sub>8K</sub></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="exp-row-title">
+                    <th colspan="18">Closed-source Models</th>
+                  </tr>
+                  <tr class="exp-muted-row">
+                    <th scope="row" class="exp-row-label">Claude-4-Sonnet</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>76.3</td>
+                    <td>62.2</td>
+                    <td>77.7</td>
+                    <td>80.5</td>
+                    <td>39.6</td>
+                    <td>63.7</td>
+                    <td>-</td>
+                    <td>58.8</td>
+                    <td>48.7</td>
+                    <td>-</td>
+                    <td>15.2</td>
+                    <td>32.3</td>
+                    <td>22.7</td>
+                  </tr>
+                  <tr class="exp-muted-row">
+                    <th scope="row" class="exp-row-label">GPT-4o</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>79.2</td>
+                    <td>65.6</td>
+                    <td>86.7</td>
+                    <td>81.0</td>
+                    <td>63.0</td>
+                    <td>69.7</td>
+                    <td>-</td>
+                    <td>65.2</td>
+                    <td>72.0</td>
+                    <td>-</td>
+                    <td>42.9</td>
+                    <td>50.6</td>
+                    <td>46.7</td>
+                  </tr>
+                  <tr class="exp-baseline-row">
+                    <th scope="row" class="exp-row-label">Qwen2.5-VL-7B</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>74.5</td>
+                    <td>65.0</td>
+                    <td>72.8</td>
+                    <td>75.5</td>
+                    <td>55.7</td>
+                    <td>68.6</td>
+                    <td>61.7</td>
+                    <td>67.1</td>
+                    <td>56.0</td>
+                    <td>60.0</td>
+                    <td>76.4</td>
+                    <td>68.6</td>
+                    <td>64.9</td>
+                  </tr>
+
+                  <tr class="exp-row-title">
+                    <th colspan="18">CoVT (1 Visual Token)</th>
+                  </tr>
+                  <tr class="exp-highlight-row">
+                    <th scope="row" class="exp-row-label">Seg only</th>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>77.9</td>
+                    <td>66.0</td>
+                    <td>80.8</td>
+                    <td>80.5</td>
+                    <td class="best">57.4</td>
+                    <td>71.1</td>
+                    <td>62.1</td>
+                    <td>68.5</td>
+                    <td>58.7</td>
+                    <td>62.1</td>
+                    <td class="best">79.1</td>
+                    <td>71.9</td>
+                    <td>69.0</td>
+                  </tr>
+                  <tr class="exp-highlight-row">
+                    <th scope="row" class="exp-row-label">Depth only</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>78.7</td>
+                    <td>65.4</td>
+                    <td>83.2</td>
+                    <td>78.2</td>
+                    <td>56.4</td>
+                    <td>71.5</td>
+                    <td class="best">62.7</td>
+                    <td class="best">69.9</td>
+                    <td>58.7</td>
+                    <td>62.0</td>
+                    <td class="best">79.1</td>
+                    <td>71.9</td>
+                    <td>69.4</td>
+                  </tr>
+                  <tr class="exp-highlight-row">
+                    <th scope="row" class="exp-row-label">DINO only</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>71.3</td>
+                    <td>64.7</td>
+                    <td>72.3</td>
+                    <td>66.7</td>
+                    <td>55.8</td>
+                    <td>71.5</td>
+                    <td>62.5</td>
+                    <td>67.9</td>
+                    <td>57.3</td>
+                    <td>61.1</td>
+                    <td>77.5</td>
+                    <td>71.0</td>
+                    <td>68.6</td>
+                  </tr>
+
+                  <tr class="exp-row-title">
+                    <th colspan="18">CoVT (3 Visual Tokens)</th>
+                  </tr>
+                  <tr class="exp-highlight-row exp-highlight-row-strong">
+                    <th scope="row" class="exp-row-label">Seg + Depth + DINO</th>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="best">80.0</td>
+                    <td class="best">66.2</td>
+                    <td>86.8</td>
+                    <td class="best">82.5</td>
+                    <td>56.0</td>
+                    <td>71.6</td>
+                    <td>62.1</td>
+                    <td>69.2</td>
+                    <td class="best">58.7</td>
+                    <td class="best">63.7</td>
+                    <td>78.0</td>
+                    <td class="best">72.9</td>
+                    <td>69.4</td>
+                  </tr>
+                  <tr class="exp-delta-row">
+                    <th scope="row" class="exp-row-label">Δ (vs Baseline)</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>+5.5</td>
+                    <td>+1.2</td>
+                    <td>+14.0</td>
+                    <td>+7.0</td>
+                    <td>+0.3</td>
+                    <td>+3.0</td>
+                    <td>+0.4</td>
+                    <td>+2.1</td>
+                    <td>+2.7</td>
+                    <td>+3.7</td>
+                    <td>+1.6</td>
+                    <td>+4.3</td>
+                    <td>+4.5</td>
+                  </tr>
+
+                  <tr class="exp-row-title">
+                    <th colspan="18">CoVT (4 Visual Tokens)</th>
+                  </tr>
+                  <tr class="exp-highlight-row exp-highlight-row-strong">
+                    <th scope="row" class="exp-row-label">Seg + Depth + DINO + Edge</th>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-on">✓</td>
+                    <td class="exp-token-on">✓</td>
+                    <td>79.8</td>
+                    <td>66.1</td>
+                    <td class="best">89.2</td>
+                    <td>80.5</td>
+                    <td>56.2</td>
+                    <td class="best">71.8</td>
+                    <td>61.9</td>
+                    <td>68.4</td>
+                    <td>56.7</td>
+                    <td>63.3</td>
+                    <td>78.5</td>
+                    <td>72.5</td>
+                    <td class="best">69.9</td>
+                  </tr>
+                  <tr class="exp-delta-row">
+                    <th scope="row" class="exp-row-label">Δ (vs Baseline)</th>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td class="exp-token-empty">-</td>
+                    <td>+5.3</td>
+                    <td>+1.1</td>
+                    <td>+16.4</td>
+                    <td>+5.0</td>
+                    <td>+0.5</td>
+                    <td>+3.2</td>
+                    <td>+0.2</td>
+                    <td>+1.3</td>
+                    <td>+0.7</td>
+                    <td>+3.3</td>
+                    <td>+2.1</td>
+                    <td>+3.9</td>
+                    <td>+5.0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="exp-caption"><strong>Comparison of CoVT with the baseline and closed-source models.</strong> CoVT delivers consistent improvements across all vision-centric benchmarks and further reveals that each visual token type contributes most effectively to the tasks related to its rich information.</p>
+          </article>
+
+          <article class="exp-card exp-card-half exp-card-aurora">
+            <div class="exp-card-head">
+              <div>
+                <h3>CoVT vs Aurora</h3>
+              </div>
+              <p class="exp-card-lead">Comparison between CoVT and Aurora based on LLaVA-v1.5-13B.</p>
+            </div>
+            <div class="exp-chip-row">
+              <span class="exp-chip exp-chip-sky">Depth tokens: 7 wins + 1 tie</span>
+              <span class="exp-chip exp-chip-lime">Seg tokens: BLINK rel. depth +45.2</span>
+            </div>
+            <div class="exp-table-wrap">
+              <table class="exp-table exp-table-aurora">
+                <thead>
+                  <tr>
+                    <th rowspan="2" class="exp-label-col">Model</th>
+                    <th colspan="3">CV-Bench</th>
+                    <th colspan="5">BLINK</th>
+                  </tr>
+                  <tr>
+                    <th>Count</th>
+                    <th>Depth</th>
+                    <th>Dist.</th>
+                    <th>Count</th>
+                    <th>Obj.<br />Loc.</th>
+                    <th>Rel.<br />Depth</th>
+                    <th>Vis.<br />Corr.</th>
+                    <th>Vis.<br />Sim.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="exp-baseline-row">
+                    <th scope="row" class="exp-row-label">LLaVA</th>
+                    <td>59.3</td>
+                    <td>61.8</td>
+                    <td>50.2</td>
+                    <td>56.7</td>
+                    <td>54.9</td>
+                    <td>52.4</td>
+                    <td>29.7</td>
+                    <td>51.1</td>
+                  </tr>
+                  <tr class="exp-row-divider">
+                    <th scope="row" class="exp-row-label">Aurora&dagger; (depth)</th>
+                    <td>54.9</td>
+                    <td>67.7</td>
+                    <td class="best">52.3</td>
+                    <td>53.3</td>
+                    <td>55.7</td>
+                    <td>62.9</td>
+                    <td>26.2</td>
+                    <td>47.4</td>
+                  </tr>
+                  <tr class="exp-highlight-row exp-highlight-row-strong">
+                    <th scope="row" class="exp-row-label">CoVT (w/ Depth)</th>
+                    <td>60.7</td>
+                    <td class="best">71.0</td>
+                    <td class="best">52.3</td>
+                    <td>56.7</td>
+                    <td class="best">59.8</td>
+                    <td class="best">75.8</td>
+                    <td class="best">31.4</td>
+                    <td class="best">53.3</td>
+                  </tr>
+                  <tr class="exp-delta-row">
+                    <th scope="row" class="exp-row-label">Δ (vs Aurora)</th>
+                    <td>+5.8</td>
+                    <td>+3.3</td>
+                    <td class="exp-neutral-delta">+0.0</td>
+                    <td>+3.4</td>
+                    <td>+4.1</td>
+                    <td>+12.9</td>
+                    <td>+5.2</td>
+                    <td>+5.9</td>
+                  </tr>
+                  <tr class="exp-row-divider">
+                    <th scope="row" class="exp-row-label">Aurora&dagger; (count)</th>
+                    <td>56.0</td>
+                    <td>62.2</td>
+                    <td>47.8</td>
+                    <td>31.7</td>
+                    <td>26.2</td>
+                    <td>24.2</td>
+                    <td>26.7</td>
+                    <td>21.5</td>
+                  </tr>
+                  <tr class="exp-highlight-row exp-highlight-row-strong">
+                    <th scope="row" class="exp-row-label">CoVT (w/ Seg)</th>
+                    <td class="best">61.9</td>
+                    <td>60.7</td>
+                    <td>51.3</td>
+                    <td class="best">58.3</td>
+                    <td>56.6</td>
+                    <td>69.4</td>
+                    <td>29.7</td>
+                    <td>52.6</td>
+                  </tr>
+                  <tr class="exp-delta-row">
+                    <th scope="row" class="exp-row-label">Δ (vs Aurora)</th>
+                    <td>+5.9</td>
+                    <td class="negative">-1.5</td>
+                    <td>+3.5</td>
+                    <td>+26.6</td>
+                    <td>+30.4</td>
+                    <td>+45.2</td>
+                    <td>+3.0</td>
+                    <td>+31.1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="exp-caption"><strong>Comparison between CoVT and Aurora based on LLaVA-v1.5-13B.</strong> &dagger; indicates our reproduced results based on the provided checkpoints.</p>
+          </article>
+
+          <article class="exp-card exp-card-half exp-card-chart">
+            <div class="exp-card-head exp-card-head-chart">
+              <div>
+                <h3>Non-vision-centric Tasks</h3>
+              </div>
+              <div class="exp-legend" aria-label="Chart legend">
+                <span class="exp-legend-item exp-legend-baseline">Qwen2.5-VL-7B</span>
+                <span class="exp-legend-item exp-legend-ours">Ours</span>
+              </div>
+            </div>
+            <div class="exp-chip-row">
+              <span class="exp-chip exp-chip-sky">Average: 66.2 to 67.4</span>
+              <span class="exp-chip exp-chip-peach">MME-translate: +7.5</span>
+              <span class="exp-chip exp-chip-lime">WorldMedQA: +5.6</span>
+            </div>
+            <div class="exp-chart-layout">
+              <div class="exp-average-chart">
+                <h4 class="exp-average-title">Average</h4>
+                <div class="exp-average-stage">
+                  <div class="exp-mini-axis exp-mini-axis-wide">
+                    <span>69.5</span>
+                    <span>65.0</span>
+                    <span>61.0</span>
+                  </div>
+                  <div class="exp-average-bars">
+                    <div class="exp-bar-group">
+                      <span class="exp-bar-value">66.2</span>
+                      <div class="exp-bar exp-bar-baseline" style="--bar-height: 61.2%;"></div>
+                      <span class="exp-bar-tag">Base</span>
+                    </div>
+                    <div class="exp-bar-group">
+                      <span class="exp-bar-value is-better">67.4</span>
+                      <div class="exp-bar exp-bar-ours" style="--bar-height: 75.3%;"></div>
+                      <span class="exp-bar-tag">Ours</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="exp-mini-grid">
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">OCRBench</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>90.5</span>
+                      <span>83.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">88.5</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 73.3%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">87.1</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 54.7%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">MME-translate</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>101.0</span>
+                      <span>87.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">92.5</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 39.3%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value is-better">100.0</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 92.9%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">MUIRBench</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>60.5</span>
+                      <span>53.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value is-lifted">58.3</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 70.7%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">58.2</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 69.3%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">HallBench</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>54.0</span>
+                      <span>47.5</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value is-lifted">52.9</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 83.1%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">52.7</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 80.0%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">A-OKVQA</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>91.5</span>
+                      <span>83.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">88.3</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 62.4%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value is-better">89.2</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 72.9%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">TaskMeAnything</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>71.5</span>
+                      <span>65.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value is-lifted">70.2</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 80.0%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">69.9</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 75.4%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">WeMATH <span class="exp-mini-title-sub">loose</span></h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>55.0</span>
+                      <span>46.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">53.1</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 78.9%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">51.1</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 56.7%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="exp-mini-chart">
+                  <h4 class="exp-mini-title">WorldMedQA</h4>
+                  <div class="exp-mini-stage">
+                    <div class="exp-mini-axis">
+                      <span>33.0</span>
+                      <span>21.0</span>
+                    </div>
+                    <div class="exp-mini-bars">
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value">25.7</span>
+                        <div class="exp-mini-bar exp-bar-baseline" style="--bar-height: 39.2%;"></div>
+                      </div>
+                      <div class="exp-mini-bar-group">
+                        <span class="exp-mini-value is-better">31.3</span>
+                        <div class="exp-mini-bar exp-bar-ours" style="--bar-height: 85.8%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="exp-caption">Beyond the gains on vision-centric benchmarks, CoVT also achieves slight improvements on <strong>non-vision-centric tasks</strong>.</p>
+          </article>
         </div>
       </section>
 
