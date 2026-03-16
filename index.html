@@ -70,9 +70,8 @@
         </figure>
       </section>
 
-      <section id="abstract" class="section container narrow reveal">
-        <h2>Abstract</h2>
-        <div class="abstract-card glass">
+      <section id="abstract" class="section container reveal">
+        <div class="abstract-card">
           <p>
             Vision–Language Models (VLMs) excel at reasoning in linguistic space but struggle with perceptual understanding that requires dense visual perception, <em>e.g.</em>, spatial reasoning and geometric awareness. This limitation stems from the fact that current VLMs have limited mechanisms to capture dense visual information across spatial dimensions. We introduce <strong>Chain-of-Visual-Thought (CoVT)</strong>, a framework that enables VLMs to reason not only in words but also through <strong>continuous visual tokens</strong> — compact latent representations that encode rich perceptual cues. Within a small budget of roughly <strong>20 tokens</strong>, CoVT distills knowledge from lightweight vision experts capturing complementary properties such as <strong>2D appearance, 3D geometry, spatial layout, and edge structure</strong>. During training, a VLM equipped with CoVT autoregressively predicts these visual tokens to reconstruct dense supervision signals (<em>e.g.</em>, depth, segmentation, edges, and DINO features). At inference, the model reasons directly in the continuous visual-token space, preserving efficiency while optionally decoding dense predictions for interpretability. Evaluated across more than <strong>ten diverse perception benchmarks</strong>, including CV-Bench, MMVP, RealWorldQA, MMStar, WorldMedQA, and HRBench, integrating CoVT into strong VLMs such as <strong>Qwen2.5-VL</strong> and <strong>LLaVA</strong> consistently improves performance by <strong>3% to 16%</strong>, demonstrating that compact continuous visual thinking enables more precise, grounded, and interpretable multimodal intelligence.
           </p>

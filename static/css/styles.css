@@ -36,17 +36,17 @@ h1, h2, h3 { margin: 0 0 12px; letter-spacing: -0.02em; }
 }
 .section.narrow { max-width: min(900px, 90vw); }
 .abstract-card {
-  margin: 28px auto 0;
-  padding: 32px 36px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.9);
-  border: 1px solid rgba(15,23,42,0.05);
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .abstract-card p {
   margin: 0;
-  font-size: 18px;
-  line-height: 1.8;
+  font-size: 16px;
+  line-height: 1.7;
   color: #0f172a;
   font-weight: 400;
 }
