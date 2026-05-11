@@ -1220,29 +1220,6 @@ body.redesign .token-popover {
 }
 body.redesign .token-popover-arrow { display: none !important; }
 
-/* ---- Cursor follower --------------------------------------- */
-body.redesign .cursor-mark {
-  position: fixed; left: 0; top: 0;
-  width: 8px; height: 8px;
-  background: var(--m-black);
-  pointer-events: none; z-index: 100;
-  transform: translate(-9999px, -9999px);
-  transition:
-    width 80ms cubic-bezier(.2,.6,.2,1),
-    height 80ms cubic-bezier(.2,.6,.2,1),
-    background 80ms cubic-bezier(.2,.6,.2,1),
-    border-radius 80ms cubic-bezier(.2,.6,.2,1),
-    opacity 100ms ease-out;
-  opacity: 0;
-  will-change: transform;
-  mix-blend-mode: difference;
-}
-body.redesign .cursor-mark.is-visible { opacity: 1; }
-body.redesign .cursor-mark.on-link { width: 16px; height: 16px; background: var(--m-red); }
-body.redesign .cursor-mark.on-card { width: 18px; height: 18px; background: var(--m-blue); }
-body.redesign .cursor-mark.on-img  { width: 22px; height: 22px; background: var(--m-yellow); border-radius: 50%; }
-@media (pointer: coarse) { body.redesign .cursor-mark { display: none; } }
-
 /* ---- Reduced motion --------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   body.redesign *, body.redesign *::before, body.redesign *::after {
