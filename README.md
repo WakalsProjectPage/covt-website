@@ -1,4 +1,4 @@
-# CoMT Website
+# CoVT Website
 
 > https://wakalsprojectpage.github.io/covt-website/
 
