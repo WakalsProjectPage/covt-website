@@ -853,6 +853,9 @@ body.redesign .results-module {
   box-shadow: none !important;
 }
 body.redesign .results-nav {
+  position: absolute !important;
+  top: 222px !important;
+  bottom: auto !important;
   width: 38px !important; height: 38px !important;
   background: var(--ink) !important;
   background-image: none !important;
@@ -862,16 +865,15 @@ body.redesign .results-nav {
   box-shadow: none !important;
   display: grid; place-items: center;
   cursor: pointer;
-  transition: background var(--t-fast), color var(--t-fast) !important;
-  transform: translateY(-50%) !important;
-  top: 50% !important;
+  transform: none !important;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast) !important;
 }
 body.redesign .results-nav:hover {
   background: var(--m-red) !important;
   background-image: none !important;
   border-color: var(--m-red) !important;
   color: var(--bg) !important;
-  transform: translateY(-50%) !important;
+  transform: none !important;
 }
 body.redesign .result-card {
   border-radius: 0 !important;
@@ -1105,13 +1107,21 @@ body.redesign .exp-mini-bar {
   animation: none !important;
   background: var(--m-blue) !important;
   background-image: none !important;
+  min-height: 4px !important;
 }
+body.redesign .exp-mini-bar { max-width: 22px !important; }
 body.redesign .exp-bar::after,
 body.redesign .exp-mini-bar::after { display: none !important; content: none !important; background: none !important; }
 body.redesign .exp-bar.exp-bar-baseline,
-body.redesign .exp-mini-bar.exp-bar-baseline { background: #C9C7BE !important; background-image: none !important; }
+body.redesign .exp-mini-bar.exp-bar-baseline {
+  background: var(--m-blue) !important;    /* Mondrian blue */
+  background-image: none !important;
+}
 body.redesign .exp-bar.exp-bar-ours,
-body.redesign .exp-mini-bar.exp-bar-ours { background: var(--m-red) !important; background-image: none !important; }
+body.redesign .exp-mini-bar.exp-bar-ours {
+  background: var(--m-yellow) !important;  /* Mondrian yellow */
+  background-image: none !important;
+}
 body.redesign .exp-bar-value,
 body.redesign .exp-mini-value {
   font-family: var(--font-mono) !important;
@@ -1149,8 +1159,8 @@ body.redesign .exp-legend-item {
   letter-spacing: .04em;
 }
 body.redesign .exp-legend-item::before { border-radius: 0 !important; }
-body.redesign .exp-legend-baseline::before { background: #C9C7BE !important; background-image: none !important; }
-body.redesign .exp-legend-ours::before { background: var(--m-red) !important; background-image: none !important; }
+body.redesign .exp-legend-baseline::before { background: var(--m-blue) !important; background-image: none !important; }
+body.redesign .exp-legend-ours::before { background: var(--m-yellow) !important; background-image: none !important; }
 
 /* ---- BibTeX ------------------------------------------------- */
 body.redesign #bibtex .code-block {
@@ -1230,6 +1240,9 @@ body.redesign .token-popover-arrow { display: none !important; }
 /* ---- Tablet ≤ 820px --------------------------------------- */
 @media (max-width: 820px) {
   body.redesign { --nav-h: 56px; }
+  body.redesign .results-nav { top: auto !important; bottom: 16px !important; }
+  body.redesign .results-nav.prev { left: calc(50% - 60px) !important; }
+  body.redesign .results-nav.next { right: calc(50% - 60px) !important; }
   body.redesign .sidebar-inner { gap: 16px !important; }
   body.redesign .sidebar .toc { gap: 16px !important; }
   body.redesign .title { font-size: clamp(26px, 5.5vw, 36px); max-width: 100%; }
