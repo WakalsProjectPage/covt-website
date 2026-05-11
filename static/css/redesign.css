@@ -32,8 +32,8 @@
   --t-mid:  120ms cubic-bezier(.2,.6,.2,1);
 
   /* layout */
-  --max: 1180px;
-  --pad: clamp(20px, 4vw, 56px);
+  --max: 1040px;
+  --pad: clamp(24px, 6vw, 88px);
   --nav-h: 60px;
 }
 
@@ -656,6 +656,10 @@ body.redesign .variant-row-split {
   align-items: start !important;
   margin: 0 0 14px !important;
 }
+/* Demo 1 only: vertically center the right column (Question) to image middle */
+body.redesign .variant-row-split { align-items: center !important; }
+/* Make container only as tall as the visible panel so demos 2-4 don't sit on dead space */
+body.redesign .anchor-panels-container { min-height: auto !important; position: relative; }
 body.redesign .variant-visual {
   margin: 0 !important;
   padding: 0 !important;
@@ -810,6 +814,32 @@ body.redesign .single-visual {
   border-radius: 0 !important;
   box-shadow: none !important;
   border: 1px solid var(--line) !important;
+  background: var(--bg) !important;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+body.redesign .single-visual .single-image,
+body.redesign .single-visual img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+/* The slider on the right of Single Visualization: match left image's full visibility */
+body.redesign .single-playground { display: block; }
+body.redesign .single-playground .compare-container {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: auto !important;
+  overflow: hidden;
+}
+body.redesign .single-playground .compare-container img,
+body.redesign .single-playground .compare-container .img-back,
+body.redesign .single-playground .compare-container .img-front {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: contain !important;
   background: var(--bg) !important;
 }
 body.redesign .single-fade { opacity: 1 !important; transform: none !important; }
