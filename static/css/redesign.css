@@ -1110,7 +1110,7 @@ body.redesign .exp-mini-bar {
   min-height: 4px !important;
 }
 body.redesign .exp-mini-bar { max-width: 22px !important; }
-body.redesign .exp-mini-bars { gap: 8px !important; }
+body.redesign .exp-mini-bars { gap: 4px !important; }
 body.redesign .exp-bar::after,
 body.redesign .exp-mini-bar::after { display: none !important; content: none !important; background: none !important; }
 body.redesign .exp-bar.exp-bar-baseline,
